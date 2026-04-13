@@ -14,7 +14,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from '../ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
 import { cn } from '@/lib/utils';
-
+import { type DateRange } from 'react-day-picker';
 
 type HousingRecommendation = AiHousingRecommendationsOutput['recommendations'][0] & { slug: string };
 
@@ -29,6 +29,7 @@ const amenitiesMap = [
 function BookingWidget({ recommendation }: { recommendation: HousingRecommendation }) {
     const [adults, setAdults] = useState(2);
     const [children, setChildren] = useState(0);
+    const [date, setDate] = useState<DateRange | undefined>();
 
     return (
         <Card className="sticky top-24 shadow-xl">
@@ -46,6 +47,8 @@ function BookingWidget({ recommendation }: { recommendation: HousingRecommendati
                         mode="range"
                         numberOfMonths={1}
                         className="p-0 mt-2"
+                        selected={date}
+                        onSelect={setDate}
                     />
                 </div>
                 <Separator />

@@ -27,6 +27,8 @@ import { format } from "date-fns";
 import { ru } from 'date-fns/locale';
 import { aiHousingRecommendations, type AiHousingRecommendationsOutput } from '@/ai/flows/ai-housing-recommendations-flow';
 import { Textarea } from "@/components/ui/textarea";
+import { HousingFilters } from "@/components/housing-filters";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const formSchema = z.object({
   destination: z.string().min(2, { message: "Пункт назначения должен содержать не менее 2 символов." }),
@@ -105,6 +107,35 @@ function HousingCard({ recommendation, index }: { recommendation: AiHousingRecom
   )
 }
 
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-6">
+      {[1, 2, 3].map((i) => (
+        <Card key={i} className="md:flex overflow-hidden">
+            <div className="md:w-2/5 relative">
+                <Skeleton className="h-full w-full aspect-video md:aspect-auto" />
+            </div>
+            <div className="md:w-3/5 flex flex-col">
+                <CardHeader>
+                    <Skeleton className="h-4 w-1/4" />
+                    <Skeleton className="h-7 w-3/4" />
+                </CardHeader>
+                <CardContent className="space-y-4">
+                    <Skeleton className="h-4 w-1/3" />
+                    <Skeleton className="h-12 w-full" />
+                </CardContent>
+                <CardFooter className="mt-auto flex items-center justify-between p-4 bg-secondary/30">
+                    <Skeleton className="h-8 w-1/3" />
+                    <Skeleton className="h-10 w-1/4" />
+                </CardFooter>
+            </div>
+        </Card>
+      ))}
+    </div>
+  )
+}
+
+
 export default function HousingPageContent() {
   const [recommendations, setRecommendations] = useState<AiHousingRecommendationsOutput | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -142,8 +173,8 @@ export default function HousingPageContent() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      <Card className="max-w-3xl mx-auto">
+    <div className="container mx-auto px-4 py-8">
+      <Card className="max-w-4xl mx-auto mb-8">
         <CardHeader>
           <CardTitle className="font-headline text-3xl">Подбор жилья</CardTitle>
           <CardDescription>Найдите идеальное место для проживания с помощью AI.</CardDescription>
@@ -215,23 +246,32 @@ export default function HousingPageContent() {
         </CardContent>
       </Card>
       
-      {isLoading && (
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
-          <p className="mt-2 text-muted-foreground">Подбираем лучшие варианты для вас...</p>
-        </div>
-      )}
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <aside className="lg:col-span-1 lg:sticky lg:top-24 h-fit">
+          <HousingFilters />
+        </aside>
 
-      {recommendations && (
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-2xl font-headline font-bold mb-6 text-center">Рекомендации по жилью</h2>
-          <div className="space-y-6">
-            {recommendations.recommendations.map((rec, index) => (
-              <HousingCard key={index} recommendation={rec} index={index} />
-            ))}
-          </div>
-        </div>
-      )}
+        <main className="lg:col-span-3">
+          {isLoading && <LoadingSkeleton />}
+          
+          {recommendations && (
+            <div className="space-y-6">
+              <h2 className="text-2xl font-headline font-bold">Найдено {recommendations.recommendations.length} вариантов</h2>
+              {recommendations.recommendations.map((rec, index) => (
+                <HousingCard key={index} recommendation={rec} index={index} />
+              ))}
+            </div>
+          )}
+
+          {!isLoading && !recommendations && (
+              <div className="flex flex-col items-center justify-center text-center p-12 border-2 border-dashed rounded-lg h-full min-h-[400px]">
+                  <Search className="h-16 w-16 text-muted-foreground/50 mb-4" />
+                  <h3 className="text-xl font-semibold">Результаты появятся здесь</h3>
+                  <p className="text-muted-foreground mt-1">Заполните форму выше, чтобы найти жилье вашей мечты.</p>
+              </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 }

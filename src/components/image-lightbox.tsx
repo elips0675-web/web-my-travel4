@@ -53,10 +53,10 @@ export function ImageLightbox({ images, startIndex = 0, isOpen, onOpenChange }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-black/90 border-0 p-0 max-w-full w-full h-full flex items-center justify-center">
-        <DialogTitle className="sr-only">Image Gallery</DialogTitle>
+      <DialogContent className="bg-black/80 border-0 p-0 max-w-full w-full h-full flex items-center justify-center">
+        <DialogTitle className="sr-only">Галерея изображений</DialogTitle>
         <DialogDescription className="sr-only">
-          Image gallery lightbox. Use the arrow keys to navigate between images, or the escape key to close.
+          Лайтбокс с галереей изображений. Используйте стрелки для навигации между изображениями или клавишу Escape для закрытия.
         </DialogDescription>
         <Carousel setApi={setApi} className="w-full h-full max-w-6xl">
           <CarouselContent className="h-full">

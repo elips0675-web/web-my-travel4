@@ -24,7 +24,7 @@ const AiRestaurantRecommendationsOutputSchema = z.object({
       cuisine: z.string().describe('The type of cuisine (e.g., "Italian", "French", "Japanese").'),
       location: z.string().describe('The location of the restaurant (address or area).'),
       description: z.string().describe('A brief description highlighting the key features and atmosphere.'),
-      priceRange: z.string().optional().describe('An estimated price range (e.g., "$$", "$$$", "Affordable").'),
+      price: z.string().optional().describe('An estimated price for a meal in Belarusian Rubles (BYN), e.g., "50 BYN", "от 100 BYN".'),
       rating: z.number().min(1).max(5).optional().describe('The rating of the restaurant on a scale of 1 to 5.'),
       specialty: z.string().optional().describe('A specialty dish or feature of the restaurant.'),
       imageUrl: z.string().url().optional().describe('A URL for an image of the restaurant.'),
@@ -54,7 +54,7 @@ For each recommendation, provide the following:
 - Cuisine: The primary type of cuisine.
 - Location: The address or neighborhood.
 - Description: A brief, compelling description of the restaurant, its atmosphere, and what makes it special.
-- Price Range: A price indicator like '₽', '₽₽', '₽₽₽'.
+- Price: An estimated price for a meal in Belarusian Rubles (BYN), e.g., "50 BYN", "от 100 BYN".
 - Rating: A star rating from 1 to 5.
 - Specialty: A recommended dish or a notable feature.
 - Image URL: Provide a placeholder image URL from \`https://picsum.photos/seed/{a-random-food-word}/800/600\`.

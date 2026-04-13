@@ -1,30 +1,33 @@
 'use client';
 
 import { useUser } from '@/firebase';
+import { useUserProfile } from '@/firebase/auth/use-user-profile';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { User as UserIcon, Edit, Loader2 } from "lucide-react";
+import { User as UserIcon, Edit, Loader2, Briefcase } from "lucide-react";
 import { useRouter } from 'next/navigation';
 import { AuthDialog } from '../auth-dialog';
 
 export default function ProfilePageContent() {
-  const { user, isLoading } = useUser();
-  const router = useRouter();
+  const { user, isLoading: isUserLoading } = useUser();
+  const { userProfile, isLoading: isProfileLoading } = useUserProfile();
 
   const demoUser = {
-      displayName: 'Демо-пользователь',
-      email: 'demo@example.com',
-      photoURL: 'https://i.pravatar.cc/150?u=demo',
-      interests: ['История', 'Архитектура', 'Гастрономия', 'Природа']
-  }
+      displayName: 'Владелец Бизнеса (Демо)',
+      email: 'owner@example.com',
+      photoURL: 'https://i.pravatar.cc/150?u=business-owner-demo',
+      isBusinessOwner: true,
+      interests: ['Гостеприимство', 'Туризм', 'Маркетинг']
+  };
+  
+  const travelerInterests = ['История', 'Архитектура', 'Гастрономия', 'Природа'];
 
-  const currentUser = user || demoUser;
-  const isDemo = !user;
-
+  const isLoading = isUserLoading || isProfileLoading;
+  
   if (isLoading) {
     return (
         <div className="container mx-auto max-w-4xl py-8 flex justify-center items-center h-96">
@@ -32,6 +35,11 @@ export default function ProfilePageContent() {
         </div>
     );
   }
+  
+  const isDemo = !user;
+  const currentUser = user ? { ...user, ...(userProfile || {}) } : demoUser;
+  const interests = currentUser.isBusinessOwner ? demoUser.interests : travelerInterests;
+
 
   return (
     <div className="container mx-auto max-w-4xl py-8">
@@ -39,7 +47,7 @@ export default function ProfilePageContent() {
         <CardHeader className="text-center">
           <div className="relative w-32 h-32 mx-auto mb-4">
             <Avatar className="w-32 h-32">
-              <AvatarImage src={currentUser.photoURL || undefined} alt={currentUser.displayName || currentUser.email || ''} />
+              <AvatarImage src={currentUser.photoURL || undefined} alt={currentUser.displayName || ''} />
               <AvatarFallback>
                 <UserIcon className="w-16 h-16" />
               </AvatarFallback>
@@ -51,7 +59,10 @@ export default function ProfilePageContent() {
             }
           </div>
           <CardTitle className="font-headline text-3xl">{currentUser.displayName || 'Пользователь'}</CardTitle>
-          <CardDescription>{currentUser.email}</CardDescription>
+          <CardDescription className="flex items-center justify-center gap-2">
+              {currentUser.isBusinessOwner && <Briefcase className="w-4 h-4" />}
+              {currentUser.email}
+            </CardDescription>
         </CardHeader>
         <CardContent className="space-y-8">
             <Separator />
@@ -72,7 +83,7 @@ export default function ProfilePageContent() {
             <div className="space-y-4">
                 <h3 className="font-semibold text-lg">Мои интересы</h3>
                 <div className="flex flex-wrap gap-2">
-                    {demoUser.interests.map(interest => (
+                    {interests.map(interest => (
                         <span key={interest} className="bg-secondary text-secondary-foreground px-3 py-1 rounded-full text-sm">
                             {interest}
                         </span>

@@ -1,17 +1,13 @@
 'use server';
 
-import { aiSuggestionsForRoute } from '@/ai/flows/ai-suggestions-for-route';
+import { aiSuggestionsForRoute, type AiSuggestionsForRouteOutput } from '@/ai/flows/ai-suggestions-for-route';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import type { Route } from '@/lib/data';
 import { Plus, Wand2 } from 'lucide-react';
 
-// Assuming the output of aiSuggestionsForRoute based on other flows
-type Suggestion = {
-    name: string;
-    description: string;
-    type: string;
-};
+type Suggestion = AiSuggestionsForRouteOutput[0];
+
 
 export default async function Suggestions({ route }: { route: Route }) {
     // For demo, let's hardcode interests. In a real app, this would come from user profile.
@@ -19,14 +15,15 @@ export default async function Suggestions({ route }: { route: Route }) {
 
     let suggestions: Suggestion[] = [];
     try {
-        // The provided flow is incomplete, so we mock the function's behavior.
-        // In a real scenario, the direct call would be:
-        // suggestions = await aiSuggestionsForRoute({
-        //     destination: route.destination,
-        //     interests: interests,
-        // });
+        const result = await aiSuggestionsForRoute({
+            destination: route.destination,
+            interests: interests,
+        });
+        suggestions = result;
 
-        // Mock response to demonstrate functionality
+    } catch (error) {
+        console.error("Failed to fetch AI suggestions:", error);
+        // Fallback to mock data if AI call fails, so the page still renders something.
         if (route.destination.toLowerCase().includes('париж')) {
             suggestions = [
                 { name: 'Музей Орсе', description: 'Насладитесь искусством импрессионистов в здании бывшего вокзала.', type: 'Музей' },
@@ -40,10 +37,6 @@ export default async function Suggestions({ route }: { route: Route }) {
                 { name: 'Мастер-класс местной кухни', description: 'Научитесь готовить традиционные блюда у местного шеф-повара.', type: 'Мастер-класс' }
             ];
         }
-
-    } catch (error) {
-        console.error("Failed to fetch AI suggestions:", error);
-        return null;
     }
     
     if (!suggestions || suggestions.length === 0) {

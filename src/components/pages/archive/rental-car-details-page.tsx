@@ -155,7 +155,7 @@ export default function RentalCarDetailsPageContent({ slug }: { slug: string }) 
     if (!car) {
         return (
             <div className="container mx-auto py-12 text-center">
-                <h1 className="text-2xl font-bold">Автомобиль не найден</h1>
+                <h1 className="text-2xl font-bold">Транспорт не найден</h1>
                 <p className="text-muted-foreground mt-2">Не удалось найти информацию по данному предложению.</p>
                 <Button asChild className="mt-4">
                     <Link href="/rental-car">Вернуться к поиску</Link>

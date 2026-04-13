@@ -19,8 +19,8 @@ const AiRentalCarRecommendationsInputSchema = z.object({
 export type AiRentalCarRecommendationsInput = z.infer<typeof AiRentalCarRecommendationsInputSchema>;
 
 const CarRecommendationSchema = z.object({
-  name: z.string().describe('The car model name, e.g., "Toyota Camry".'),
-  type: z.string().describe('The car type, e.g., "Седан", "SUV", "Компакт".'),
+  name: z.string().describe('The transport model name, e.g., "Toyota Camry".'),
+  type: z.string().describe('The transport type, e.g., "Седан", "SUV", "Компакт".'),
   supplier: z.string().describe('The rental company name, e.g., "Hertz", "Avis".'),
   pricePerDay: z.string().describe('The estimated price per day, e.g., "₽3500".'),
   rating: z.number().min(1).max(5).describe('The rating of the car/service on a scale of 1 to 5.'),
@@ -34,7 +34,7 @@ const CarRecommendationSchema = z.object({
 });
 
 const AiRentalCarRecommendationsOutputSchema = z.object({
-  recommendations: z.array(CarRecommendationSchema).describe('A list of recommended cars for rental.'),
+  recommendations: z.array(CarRecommendationSchema).describe('A list of recommended transport for rental.'),
 });
 
 export type AiRentalCarRecommendationsOutput = z.infer<typeof AiRentalCarRecommendationsOutputSchema>;
@@ -47,7 +47,7 @@ const prompt = ai.definePrompt({
   name: 'aiRentalCarRecommendationsPrompt',
   input: {schema: AiRentalCarRecommendationsInputSchema},
   output: {schema: AiRentalCarRecommendationsOutputSchema},
-  prompt: `You are an expert car rental agent. Based on the user's location, rental dates, and preferences, suggest 5 suitable rental cars.
+  prompt: `You are an expert in transport rental. Based on the user's location, rental dates, and preferences, suggest 5 suitable rental transport options.
 
 Consider the following details:
 Pickup Location: {{{location}}}
@@ -55,13 +55,13 @@ Rental Dates: From {{{startDate}}} to {{{endDate}}}
 User Preferences: {{{preferences}}}
 
 For each recommendation, provide:
-- name: Car model.
-- type: Car class (e.g., Седан, SUV, Компакт, Эконом, Премиум).
+- name: Transport model.
+- type: Transport class (e.g., Седан, SUV, Компакт, Эконом, Премиум).
 - supplier: Rental company name.
 - pricePerDay: Estimated price per day in RUB, e.g., "₽3500".
 - rating: A star rating from 1 to 5.
 - features: An object with passengers, luggage (number of bags), transmission ("Автомат" or "Механика"), and doors.
-- imageUrl: Provide a placeholder image URL from \`https://picsum.photos/seed/{a-random-car-related-word}/800/600\`.
+- imageUrl: Provide a placeholder image URL from \`https://picsum.photos/seed/{a-random-transport-related-word}/800/600\`.
 
 Ensure the recommendations are diverse and match the user's preferences.`,
 });
@@ -75,7 +75,7 @@ const aiRentalCarRecommendationsFlow = ai.defineFlow(
   async input => {
     const {output} = await prompt(input);
     if (!output) {
-      throw new Error('Failed to get car rental recommendations from the AI.');
+      throw new Error('Failed to get transport rental recommendations from the AI.');
     }
     return output;
   }

@@ -19,7 +19,7 @@ export function RentalCarFilters() {
       </CardHeader>
       <CardContent className="space-y-8">
         <div>
-          <h4 className="font-semibold mb-4">Тип автомобиля</h4>
+          <h4 className="font-semibold mb-4">Тип транспорта</h4>
           <div className="space-y-2">
             {carTypes.map((type) => (
               <div key={type} className="flex items-center space-x-2">

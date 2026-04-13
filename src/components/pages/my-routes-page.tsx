@@ -192,7 +192,7 @@ export default function MyRoutesPageContent() {
                                 <TabsTrigger value="housing">Жилье</TabsTrigger>
                                 <TabsTrigger value="restaurants">Кафе и рестораны</TabsTrigger>
                                 <TabsTrigger value="activities">Развлечения</TabsTrigger>
-                                <TabsTrigger value="rental-car">Авто</TabsTrigger>
+                                <TabsTrigger value="rental-car">Транспорт</TabsTrigger>
                             </TabsList>
                         </div>
                         <TabsContent value="tours">
@@ -317,8 +317,8 @@ export default function MyRoutesPageContent() {
                         </TabsContent>
                         <TabsContent value="rental-car">
                              <div className="text-center max-w-2xl mx-auto mb-12">
-                                <h2 className="text-4xl md:text-5xl font-bold font-headline mb-4">Популярные авто</h2>
-                                <p className="text-lg text-muted-foreground">Выберите лучший автомобиль для вашего путешествия по выгодной цене.</p>
+                                <h2 className="text-4xl md:text-5xl font-bold font-headline mb-4">Популярный транспорт</h2>
+                                <p className="text-lg text-muted-foreground">Выберите лучший транспорт для вашего путешествия по выгодной цене.</p>
                             </div>
                              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                                 {popularCars.map((car, index) => (

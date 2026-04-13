@@ -146,7 +146,7 @@ export default function RentalCarDetailsPageContent({ slug }: { slug: string }) 
     if (!car) {
         return (
             <div className="container mx-auto py-12 text-center">
-                <h1 className="text-2xl font-bold">Автомобиль не найден</h1>
+                <h1 className="text-2xl font-bold">Транспорт не найден</h1>
                 <p className="text-muted-foreground mt-2">Не удалось найти информацию по данному предложению.</p>
                 <Button asChild className="mt-4">
                     <Link href="/rental-car">Вернуться к поиску</Link>
@@ -198,14 +198,14 @@ export default function RentalCarDetailsPageContent({ slug }: { slug: string }) 
 
                 <div className="grid grid-cols-2 md:grid-cols-4 grid-rows-2 gap-2 h-[50vh] max-h-[500px] mb-8">
                     <button onClick={() => openLightbox(0)} className="col-span-2 row-span-2 relative rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                        <Image src={galleryImages[0]} alt={car.name} fill className="object-cover group-hover:scale-105 transition-transform" data-ai-hint={`${car.type} car exterior`} />
+                        <Image src={galleryImages[0]} alt={car.name} fill className="object-cover group-hover:scale-105 transition-transform" data-ai-hint={`${car.type} transport exterior`} />
                         <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                             <Search className="w-12 h-12 text-white" />
                         </div>
                     </button>
                     {galleryImages.slice(1, 3).map((img, i) => (
                         <button onClick={() => openLightbox(i + 1)} key={i} className="relative rounded-lg overflow-hidden group focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2">
-                            <Image src={img} alt={`${car.name} - фото ${i + 1}`} fill className="object-cover group-hover:scale-105 transition-transform" data-ai-hint={`${car.type} car interior`} />
+                            <Image src={img} alt={`${car.name} - фото ${i + 1}`} fill className="object-cover group-hover:scale-105 transition-transform" data-ai-hint={`${car.type} transport interior`} />
                              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                                 <Search className="w-8 h-8 text-white" />
                             </div>

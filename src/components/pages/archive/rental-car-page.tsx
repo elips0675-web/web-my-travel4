@@ -212,8 +212,8 @@ export default function RentalCarPageContent() {
     <div className="container mx-auto px-4 py-8">
       <Card className="max-w-7xl mx-auto mb-8">
         <CardHeader>
-          <CardTitle className="font-headline text-3xl">Аренда автомобилей</CardTitle>
-          <CardDescription>Найдите лучший автомобиль для вашего путешествия.</CardDescription>
+          <CardTitle className="font-headline text-3xl">Аренда транспорта</CardTitle>
+          <CardDescription>Найдите лучший транспорт для вашего путешествия.</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -261,7 +261,7 @@ export default function RentalCarPageContent() {
               </div>
               <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
-                Найти автомобиль
+                Найти транспорт
               </Button>
             </form>
           </Form>
@@ -272,7 +272,7 @@ export default function RentalCarPageContent() {
           <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg max-w-4xl mx-auto">
               <Search className="h-12 w-12 text-muted-foreground/50 mb-4" />
               <h3 className="text-xl font-semibold">Результаты поиска появятся здесь</h3>
-              <p className="text-muted-foreground mt-1">Заполните форму выше, чтобы найти автомобиль для вашей поездки. Ниже представлены популярные варианты.</p>
+              <p className="text-muted-foreground mt-1">Заполните форму выше, чтобы найти транспорт для вашей поездки. Ниже представлены популярные варианты.</p>
           </div>
       )}
 
@@ -286,7 +286,7 @@ export default function RentalCarPageContent() {
           
           {!isLoading && hasSearched && recommendations && recommendations.length > 0 && (
             <div>
-              <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} автомобилей</h2>
+              <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} вариантов</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
                 {recommendations.map((car, index) => (
                   <CarCard key={index} car={car} index={index} />

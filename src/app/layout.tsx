@@ -40,7 +40,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 Развлечения
               </Link>
               <Link href="/rental-car" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Авто
+                Транспорт
               </Link>
             </nav>
           </div>

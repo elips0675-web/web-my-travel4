@@ -18,9 +18,47 @@
           "type": "string",
           "format": "uri",
           "description": "URL of the user's profile picture."
+        },
+        "isBusinessOwner": {
+          "type": "boolean",
+          "description": "Whether the user is a business owner."
         }
       },
-      "required": ["email"]
+      "required": ["email", "isBusinessOwner"]
+    },
+    "Business": {
+      "title": "Business",
+      "description": "Represents a business listing on the platform.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "The UID of the user who owns this business."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the business."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the business."
+        },
+        "category": {
+          "type": "string",
+          "description": "The category of the business.",
+          "enum": ["tours", "housing", "restaurants", "activities", "rental-car"]
+        },
+        "imageUrl": {
+          "type": "string",
+          "format": "uri",
+          "description": "URL of the primary image for the business."
+        },
+        "location": {
+          "type": "string",
+          "description": "The address or location of the business."
+        }
+      },
+      "required": ["ownerId", "name", "description", "category", "location"]
     }
   },
   "auth": {
@@ -32,6 +70,12 @@
         "$ref": "#/entities/UserProfile"
       },
       "description": "Stores public user profile data."
+    },
+    "/businesses/{businessId}": {
+      "schema": {
+        "$ref": "#/entities/Business"
+      },
+      "description": "Stores business listings."
     }
   }
 }

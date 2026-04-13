@@ -1,5 +1,5 @@
 'use client';
-import { useUser, useAuth } from '@/firebase';
+import { useUser } from '@/firebase';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import {
@@ -15,14 +15,21 @@ import { signOut } from 'firebase/auth';
 import { User as UserIcon, LogOut, LogIn } from 'lucide-react';
 import Link from 'next/link';
 import { Skeleton } from './ui/skeleton';
+import { useAuth } from '@/firebase';
+import { useUserProfile } from '@/firebase/auth/use-user-profile';
 
 export function AuthButton() {
-    const { user, isLoading } = useUser();
+    const { user, isLoading: isUserLoading } = useUser();
+    const { userProfile, isLoading: isProfileLoading } = useUserProfile();
     const auth = useAuth();
 
     const handleLogout = async () => {
-        await signOut(auth);
+        if (auth) {
+            await signOut(auth);
+        }
     };
+
+    const isLoading = isUserLoading || isProfileLoading;
 
     if (isLoading) {
         return <Skeleton className="h-10 w-10 rounded-full" />;
@@ -78,6 +85,11 @@ export function AuthButton() {
             <DropdownMenuContent align="end">
                 <DropdownMenuLabel>{user.email}</DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                {userProfile?.isBusinessOwner && (
+                    <DropdownMenuItem asChild>
+                        <Link href="/dashboard">Панель управления</Link>
+                    </DropdownMenuItem>
+                )}
                 <DropdownMenuItem asChild>
                     <Link href="/profile">Профиль</Link>
                 </DropdownMenuItem>

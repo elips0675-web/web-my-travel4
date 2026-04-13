@@ -29,6 +29,42 @@
       "description": "Inside of a modern art museum.",
       "imageUrl": "https://picsum.photos/seed/museum/600/400",
       "imageHint": "art museum"
+    },
+    {
+      "id": "destination-paris",
+      "description": "Eiffel Tower in Paris.",
+      "imageUrl": "https://picsum.photos/seed/paris/600/800",
+      "imageHint": "paris city"
+    },
+    {
+      "id": "destination-rome",
+      "description": "Colosseum in Rome.",
+      "imageUrl": "https://picsum.photos/seed/rome/600/800",
+      "imageHint": "rome city"
+    },
+    {
+      "id": "destination-ny",
+      "description": "New York City skyline.",
+      "imageUrl": "https://picsum.photos/seed/newyork/600/800",
+      "imageHint": "newyork city"
+    },
+    {
+      "id": "destination-tokyo",
+      "description": "Streets of Tokyo at night.",
+      "imageUrl": "https://picsum.photos/seed/tokyo/600/800",
+      "imageHint": "tokyo city"
+    },
+    {
+      "id": "destination-bali",
+      "description": "A temple in Bali.",
+      "imageUrl": "https://picsum.photos/seed/bali/600/800",
+      "imageHint": "bali temple"
+    },
+    {
+      "id": "destination-santorini",
+      "description": "White buildings of Santorini.",
+      "imageUrl": "https://picsum.photos/seed/santorini/600/800",
+      "imageHint": "santorini buildings"
     }
   ]
 }

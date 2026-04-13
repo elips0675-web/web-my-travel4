@@ -186,6 +186,33 @@ export default function MyRoutesPageContent() {
             image: PlaceHolderImages.find(img => img.id === 'activity-museum'),
         }
     ];
+    
+    const destinations = [
+        {
+            name: "Париж",
+            image: PlaceHolderImages.find(img => img.id === 'destination-paris'),
+        },
+        {
+            name: "Рим",
+            image: PlaceHolderImages.find(img => img.id === 'destination-rome'),
+        },
+        {
+            name: "Нью-Йорк",
+            image: PlaceHolderImages.find(img => img.id === 'destination-ny'),
+        },
+        {
+            name: "Токио",
+            image: PlaceHolderImages.find(img => img.id === 'destination-tokyo'),
+        },
+        {
+            name: "Бали",
+            image: PlaceHolderImages.find(img => img.id === 'destination-bali'),
+        },
+        {
+            name: "Санторини",
+            image: PlaceHolderImages.find(img => img.id === 'destination-santorini'),
+        },
+    ];
 
     return (
         <>
@@ -253,6 +280,29 @@ export default function MyRoutesPageContent() {
                                     </div>
                                 </div>
                             </Card>
+                        ))}
+                    </div>
+                </div>
+            </section>
+
+            <section className="py-12 lg:py-20 bg-secondary/30">
+                <div className="container mx-auto px-4">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center font-headline mb-10">Популярные направления</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {destinations.map((destination, index) => (
+                            <div key={index} className="relative aspect-[3/4] rounded-xl overflow-hidden group shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <Image
+                                    src={destination.image?.imageUrl || `https://picsum.photos/seed/${destination.name}/600/800`}
+                                    alt={destination.image?.description || destination.name}
+                                    fill
+                                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                    data-ai-hint={destination.image?.imageHint || destination.name.toLowerCase()}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                                <div className="absolute bottom-0 left-0 p-6 text-white">
+                                    <h3 className="font-bold font-headline text-2xl">{destination.name}</h3>
+                                </div>
+                            </div>
                         ))}
                     </div>
                 </div>

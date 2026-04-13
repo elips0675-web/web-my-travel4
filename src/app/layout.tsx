@@ -28,16 +28,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             </Link>
             <nav className="hidden md:flex items-center gap-4">
               <Link href="/tours" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Поиск Туров
+                Туры
               </Link>
               <Link href="/housing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Аренда Жилья
+                Жилье
               </Link>
               <Link href="/restaurants" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Кафе и рестораны
               </Link>
               <Link href="/rental-car" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Аренда Авто
+                Авто
               </Link>
             </nav>
           </div>

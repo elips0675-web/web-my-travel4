@@ -200,11 +200,11 @@ export default function MyRoutesPageContent() {
                     <Tabs defaultValue="tour" className="w-full">
                         <div className="flex justify-center mb-12">
                             <TabsList>
-                                <TabsTrigger value="tour">Тур</TabsTrigger>
+                                <TabsTrigger value="tour">Туры</TabsTrigger>
                                 <TabsTrigger value="hotel">Жилье</TabsTrigger>
                                 <TabsTrigger value="restaurants">Кафе и рестораны</TabsTrigger>
                                 <TabsTrigger value="activity">Активности</TabsTrigger>
-                                <TabsTrigger value="rental-car">Аренда авто</TabsTrigger>
+                                <TabsTrigger value="rental-car">Авто</TabsTrigger>
                             </TabsList>
                         </div>
                         <TabsContent value="tour">

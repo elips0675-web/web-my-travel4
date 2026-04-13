@@ -13,6 +13,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Label } from '../ui/label';
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover';
+import { cn } from '@/lib/utils';
 
 
 type HousingRecommendation = AiHousingRecommendationsOutput['recommendations'][0] & { slug: string };

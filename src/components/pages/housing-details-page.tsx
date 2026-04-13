@@ -239,12 +239,16 @@ export default function HousingDetailsPageContent({ slug }: { slug: string }) {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-12">
-                <div className="lg:col-span-2">
-                    <div className="prose prose-stone dark:prose-invert max-w-none">
-                        <h2 className="font-headline font-bold text-2xl mb-4">О {recommendation.type.toLowerCase()}</h2>
-                        <p>{recommendation.description}</p>
-                    </div>
-                    <Separator className="my-6" />
+                <div className="lg:col-span-2 space-y-8">
+                    <Card>
+                        <CardHeader>
+                            <CardTitle className="font-headline text-2xl">О {recommendation.type.toLowerCase()}</CardTitle>
+                        </CardHeader>
+                        <CardContent className="prose prose-stone dark:prose-invert max-w-none">
+                            <p>{recommendation.description}</p>
+                        </CardContent>
+                    </Card>
+
                     <Tabs defaultValue="amenities" className="w-full">
                         <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex">
                             <TabsTrigger value="amenities">Удобства</TabsTrigger>

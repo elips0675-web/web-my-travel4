@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from '@/components/ui/dialog';
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious, type CarouselApi } from '@/components/ui/carousel';
 import Image from 'next/image';
 import { X } from 'lucide-react';
@@ -54,6 +54,10 @@ export function ImageLightbox({ images, startIndex = 0, isOpen, onOpenChange }: 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="bg-black/90 border-0 p-0 max-w-full w-full h-full flex items-center justify-center">
+        <DialogTitle className="sr-only">Image Gallery</DialogTitle>
+        <DialogDescription className="sr-only">
+          Image gallery lightbox. Use the arrow keys to navigate between images, or the escape key to close.
+        </DialogDescription>
         <Carousel setApi={setApi} className="w-full h-full max-w-6xl">
           <CarouselContent className="h-full">
             {images.map((src, index) => (

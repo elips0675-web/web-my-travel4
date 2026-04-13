@@ -5,7 +5,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import './globals.css';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 
 export const metadata = {
   title: 'Путевой Компас',
@@ -29,25 +29,25 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <span className="font-headline text-xl font-bold text-foreground">Путевой Компас</span>
             </Link>
             <nav className="hidden md:flex items-center gap-x-8">
-              <Link href="/tours" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/tours" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Туры
               </Link>
-              <Link href="/housing" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/housing" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Жилье
               </Link>
-              <Link href="/restaurants" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/restaurants" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Кафе и рестораны
               </Link>
-              <Link href="/activities" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/activities" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Развлечения
               </Link>
-              <Link href="/rental-car" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/rental-car" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Транспорт
               </Link>
-              <Link href="/multi-filter" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/multi-filter" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Фильтр
               </Link>
-              <Link href="/filter-map" className="text-lg font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/filter-map" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Фильтр-карта
               </Link>
             </nav>
@@ -68,6 +68,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left">
+                  <SheetHeader className="sr-only">
+                    <SheetTitle>Мобильное меню</SheetTitle>
+                    <SheetDescription>
+                      Навигация по сайту. Выберите один из пунктов для перехода на соответствующую страницу.
+                    </SheetDescription>
+                  </SheetHeader>
                   <nav className="grid gap-6 text-lg font-medium mt-8">
                     <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
                       <Compass className="h-6 w-6 text-primary" />

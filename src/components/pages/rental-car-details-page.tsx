@@ -28,9 +28,7 @@ function BookingWidget({ car }: { car: CarRecommendation }) {
         <Card className="sticky top-24 shadow-xl">
             <CardHeader>
                 <div>
-                    <span className="text-muted-foreground text-sm">От </span>
-                    <span className="font-bold text-3xl">{car.pricePerDay}</span>
-                    <span className="text-muted-foreground text-sm"> / день</span>
+                    <span className="font-bold text-3xl">{car.price}</span>
                 </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -106,16 +104,6 @@ function PageSkeleton() {
         </div>
     )
 }
-
-const carFeaturesList = [
-    { label: 'Кондиционер', key: 'airConditioning', available: true },
-    { label: 'GPS Навигация', key: 'gps', available: true },
-    { label: 'Bluetooth', key: 'bluetooth', available: true },
-    { label: 'Детское кресло', key: 'childSeat', available: false },
-    { label: 'Дополнительный водитель', key: 'additionalDriver', available: false },
-    { label: 'Безлимитный пробег', key: 'unlimitedMileage', available: true },
-]
-
 
 export default function RentalCarDetailsPageContent({ slug }: { slug: string }) {
     const [car, setCar] = useState<CarRecommendation | null>(null);
@@ -221,44 +209,32 @@ export default function RentalCarDetailsPageContent({ slug }: { slug: string }) 
                             </CardHeader>
                             <CardContent>
                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
-                                    <div className="flex flex-col items-center gap-2">
+                                    {car.features.passengers && <div className="flex flex-col items-center gap-2">
                                         <Users className="w-8 h-8 text-primary" />
                                         <p className="font-semibold">{car.features.passengers} Пассажиров</p>
-                                    </div>
-                                     <div className="flex flex-col items-center gap-2">
+                                    </div>}
+                                     {car.features.luggage && <div className="flex flex-col items-center gap-2">
                                         <Briefcase className="w-8 h-8 text-primary" />
                                         <p className="font-semibold">{car.features.luggage} Багаж</p>
-                                    </div>
-                                    <div className="flex flex-col items-center gap-2">
+                                    </div>}
+                                    {car.features.transmission && <div className="flex flex-col items-center gap-2">
                                         <Cog className="w-8 h-8 text-primary" />
                                         <p className="font-semibold">{car.features.transmission}</p>
-                                    </div>
-                                    <div className="flex flex-col items-center gap-2">
+                                    </div>}
+                                    {car.features.doors && <div className="flex flex-col items-center gap-2">
                                         <DoorClosed className="w-8 h-8 text-primary" />
                                         <p className="font-semibold">{car.features.doors} Двери</p>
-                                    </div>
+                                    </div>}
                                 </div>
                             </CardContent>
                         </Card>
 
-                        <Tabs defaultValue="features" className="w-full">
-                            <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex">
-                                <TabsTrigger value="features">Доступные опции</TabsTrigger>
+                        <Tabs defaultValue="reviews" className="w-full">
+                            <TabsList className="grid w-full grid-cols-1 md:w-auto md:inline-flex">
                                 <TabsTrigger value="reviews">Отзывы</TabsTrigger>
                             </TabsList>
-                            <TabsContent value="features" className="pt-6">
-                                <h3 className="font-headline font-bold text-2xl mb-4">Что входит в стоимость</h3>
-                                <div className="grid grid-cols-2 gap-4">
-                                    {carFeaturesList.map((feature) => (
-                                        <div key={feature.key} className={cn("flex items-center gap-2", !feature.available && "text-muted-foreground line-through")}>
-                                            <CheckCircle className="w-5 h-5 text-green-500" />
-                                            <span>{feature.label}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            </TabsContent>
                             <TabsContent value="reviews" className="pt-6">
-                                <h3 className="font-headline font-bold text-2xl mb-4">Отзывы водителей</h3>
+                                <h3 className="font-headline font-bold text-2xl mb-4">Отзывы</h3>
                                 <p className="text-muted-foreground">Здесь скоро появятся отзывы.</p>
                             </TabsContent>
                         </Tabs>

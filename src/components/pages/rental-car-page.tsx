@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -36,15 +37,26 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import { Checkbox } from "../ui/checkbox";
 
-type CarRecommendation = AiRentalCarRecommendationsOutput['recommendations'][0];
-type CarRecommendationWithSlug = CarRecommendation & { slug: string };
+type TransportRecommendation = AiRentalCarRecommendationsOutput['recommendations'][0];
+type TransportRecommendationWithSlug = TransportRecommendation & { slug: string };
+
+const transportCategories = [
+    { id: 'Каршеринг', label: 'Каршеринг' },
+    { id: 'Такси', label: 'Такси' },
+    { id: 'Велосипеды', label: 'Велосипеды' },
+    { id: 'Самокаты', label: 'Самокаты' },
+];
 
 const formSchema = z.object({
   location: z.string().min(2, { message: "Место получения должно содержать не менее 2 символов." }),
   dates: z.object({
     from: z.date({ required_error: "Необходима дата начала." }),
     to: z.date({ required_error: "Необходима дата окончания." }),
+  }),
+  transportCategories: z.array(z.string()).refine((value) => value.length > 0, {
+    message: "Выберите хотя бы одну категорию.",
   }),
 });
 
@@ -62,44 +74,41 @@ const generateSlug = (name: string, index: number) => {
         .replace(/-+/g, '-') + `-${index}`;
 };
 
-function CarCard({ car, index }: { car: CarRecommendationWithSlug, index: number }) {
+function TransportCard({ transport, index }: { transport: TransportRecommendationWithSlug, index: number }) {
     return (
       <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
-      <div className="relative h-48 overflow-hidden">
-        <Image
-          src={car.imageUrl || `https://picsum.photos/seed/car${index}/800/600`}
-          alt={car.name}
-          fill
-          className="object-cover group-hover:scale-110 transition-transform duration-500"
-          data-ai-hint={`${car.type.toLowerCase()} car`}
-        />
-        <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1">
-          <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-          <span className="font-semibold text-card-foreground">{car.rating?.toFixed(1)}</span>
+        <div className="relative h-48 overflow-hidden">
+          <Image
+            src={transport.imageUrl || `https://picsum.photos/seed/transport${index}/800/600`}
+            alt={transport.name}
+            fill
+            className="object-cover group-hover:scale-110 transition-transform duration-500"
+            data-ai-hint={`${transport.type.toLowerCase()} transport`}
+          />
+          <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1">
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span className="font-semibold text-card-foreground">{transport.rating?.toFixed(1)}</span>
+          </div>
         </div>
-      </div>
-      <CardHeader>
-        <CardDescription>{car.type} - {car.supplier}</CardDescription>
-        <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{car.name}</CardTitle>
-      </CardHeader>
-      <CardContent className="flex flex-col flex-grow">
-        <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>{car.features.passengers}</span></div>
-          <div className="flex items-center gap-1.5"><Briefcase className="w-4 h-4" /><span>{car.features.luggage}</span></div>
-          <div className="flex items-center gap-1.5"><Cog className="w-4 h-4" /><span>{car.features.transmission}</span></div>
-          <div className="flex items-center gap-1.5"><DoorClosed className="w-4 h-4" /><span>{car.features.doors}</span></div>
-        </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
-        <div>
-          <span className="text-2xl font-bold text-primary">{car.pricePerDay}</span>
-          <span className="text-muted-foreground text-sm">/день</span>
-        </div>
-        <Button asChild>
-          <Link href={`/rental-car/${car.slug}`}>Подробнее</Link>
-        </Button>
-      </CardFooter>
-    </Card>
+        <CardHeader>
+          <CardDescription>{transport.type} - {transport.supplier}</CardDescription>
+          <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{transport.name}</CardTitle>
+        </CardHeader>
+        <CardContent className="flex flex-col flex-grow">
+          <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+            {transport.features.passengers && <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>{transport.features.passengers}</span></div>}
+            {transport.features.luggage && <div className="flex items-center gap-1.5"><Briefcase className="w-4 h-4" /><span>{transport.features.luggage}</span></div>}
+            {transport.features.transmission && <div className="flex items-center gap-1.5"><Cog className="w-4 h-4" /><span>{transport.features.transmission}</span></div>}
+            {transport.features.doors && <div className="flex items-center gap-1.5"><DoorClosed className="w-4 h-4" /><span>{transport.features.doors}</span></div>}
+          </div>
+        </CardContent>
+        <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+          <div className="text-2xl font-bold text-primary">{transport.price}</div>
+          <Button asChild>
+            <Link href={`/rental-car/${transport.slug}`}>Подробнее</Link>
+          </Button>
+        </CardFooter>
+      </Card>
     );
 }
   
@@ -130,32 +139,24 @@ function LoadingSkeleton() {
     );
 }
 
-const baseMockCarData: AiRentalCarRecommendationsOutput = {
+const mockTransportData: AiRentalCarRecommendationsOutput = {
     recommendations: [
-        { name: "Kia Rio", type: "Эконом", supplier: "Local Rent", pricePerDay: "₽2500", rating: 4.5, features: { passengers: 5, luggage: 2, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/kiario/800/600" },
-        { name: "Volkswagen Polo", type: "Эконом", supplier: "Profi-Car", pricePerDay: "₽2800", rating: 4.6, features: { passengers: 5, luggage: 2, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/vwpolo/800/600" },
-        { name: "Toyota Camry", type: "Седан", supplier: "Hertz", pricePerDay: "₽4500", rating: 4.8, features: { passengers: 5, luggage: 3, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/camry/800/600" },
-        { name: "Renault Duster", type: "SUV", supplier: "Avis", pricePerDay: "₽3800", rating: 4.7, features: { passengers: 5, luggage: 4, transmission: "Механика", doors: 4 }, imageUrl: "https://picsum.photos/seed/duster/800/600" },
-        { name: "BMW 5 Series", type: "Премиум", supplier: "Sixt", pricePerDay: "₽9500", rating: 4.9, features: { passengers: 5, luggage: 3, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/bmw5/800/600" },
-        { name: "Hyundai Creta", type: "SUV", supplier: "Local Rent", pricePerDay: "₽3500", rating: 4.6, features: { passengers: 5, luggage: 3, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/creta/800/600" },
+        { name: "Яндекс.Драйв", type: "Каршеринг", supplier: "Яндекс", price: "от 8 ₽/мин", rating: 4.7, features: { passengers: 5, luggage: 2, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/yandexdrive/800/600" },
+        { name: "Ситидрайв", type: "Каршеринг", supplier: "Ситимобил", price: "от 7.5 ₽/мин", rating: 4.6, features: { passengers: 5, luggage: 2, transmission: "Автомат", doors: 4 }, imageUrl: "https://picsum.photos/seed/citydrive/800/600" },
+        { name: "Яндекс.Такси", type: "Такси", supplier: "Яндекс", price: "от 150 ₽", rating: 4.8, features: { passengers: 4 }, imageUrl: "https://picsum.photos/seed/yandextaxi/800/600" },
+        { name: "Nextbike", type: "Велосипеды", supplier: "Nextbike", price: "от 50 ₽/час", rating: 4.5, features: { passengers: 1 }, imageUrl: "https://picsum.photos/seed/nextbike/800/600" },
+        { name: "Whoosh", type: "Самокаты", supplier: "Whoosh", price: "50₽ старт, 7₽/мин", rating: 4.6, features: { passengers: 1 }, imageUrl: "https://picsum.photos/seed/whoosh/800/600" },
+        { name: "Uber", type: "Такси", supplier: "Uber", price: "от 140 ₽", rating: 4.7, features: { passengers: 4 }, imageUrl: "https://picsum.photos/seed/uber/800/600" },
     ],
 };
 
-const mockCarData: AiRentalCarRecommendationsOutput = {
-    recommendations: Array.from({ length: 4 }).flatMap(() => baseMockCarData.recommendations).map((rec, index) => ({
-        ...rec,
-        name: `${rec.name} ${Math.floor(index/baseMockCarData.recommendations.length) + 1}`,
-        imageUrl: rec.imageUrl?.replace('/seed/', `/seed/${index}-`)
-    }))
-};
-
-const mockCarDataWithSlugs = mockCarData.recommendations.map((car, index) => ({
-    ...car,
-    slug: generateSlug(car.name, index)
+const mockTransportDataWithSlugs = mockTransportData.recommendations.map((transport, index) => ({
+    ...transport,
+    slug: generateSlug(transport.name, index)
 }));
 
 export default function RentalCarPageContent() {
-  const [recommendations, setRecommendations] = useState<CarRecommendationWithSlug[]>([]);
+  const [recommendations, setRecommendations] = useState<TransportRecommendationWithSlug[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);
   const { toast } = useToast();
@@ -164,7 +165,7 @@ export default function RentalCarPageContent() {
   
   useEffect(() => {
     if (typeof window !== 'undefined') {
-        sessionStorage.setItem('rentalCarRecommendations', JSON.stringify(mockCarDataWithSlugs));
+        sessionStorage.setItem('rentalCarRecommendations', JSON.stringify(mockTransportDataWithSlugs));
     }
   }, []);
 
@@ -172,6 +173,7 @@ export default function RentalCarPageContent() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       location: "",
+      transportCategories: ["Каршеринг", "Такси"],
     },
   });
 
@@ -184,7 +186,7 @@ export default function RentalCarPageContent() {
     // TODO: Connect to AI flow
     console.log(values);
     await new Promise(resolve => setTimeout(resolve, 2000));
-    const recommendationsWithSlugs = mockCarData.recommendations.map((rec, index) => ({
+    const recommendationsWithSlugs = mockTransportData.recommendations.filter(r => values.transportCategories.includes(r.type)).map((rec, index) => ({
         ...rec,
         slug: generateSlug(rec.name, index)
     }));
@@ -201,10 +203,10 @@ export default function RentalCarPageContent() {
     setIsLoading(false);
   }
 
-  const currentCars = hasSearched ? recommendations : mockCarDataWithSlugs;
+  const currentTransport = hasSearched ? recommendations : mockTransportDataWithSlugs;
 
-  const totalPages = Math.ceil(currentCars.length / itemsPerPage);
-  const paginatedCars = currentCars.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
+  const totalPages = Math.ceil(currentTransport.length / itemsPerPage);
+  const paginatedTransport = currentTransport.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
@@ -223,7 +225,7 @@ export default function RentalCarPageContent() {
         <CardContent>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <FormField
                   control={form.control}
                   name="location"
@@ -264,6 +266,58 @@ export default function RentalCarPageContent() {
                   )}
                 />
               </div>
+
+               <FormField
+                control={form.control}
+                name="transportCategories"
+                render={() => (
+                  <FormItem>
+                    <div className="mb-4">
+                      <FormLabel>Тип транспорта</FormLabel>
+                      <FormDescription>
+                        Выберите один или несколько типов транспорта.
+                      </FormDescription>
+                    </div>
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      {transportCategories.map((item) => (
+                        <FormField
+                          key={item.id}
+                          control={form.control}
+                          name="transportCategories"
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={item.id}
+                                className="flex flex-row items-center space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <Checkbox
+                                    checked={field.value?.includes(item.id)}
+                                    onCheckedChange={(checked) => {
+                                      return checked
+                                        ? field.onChange([...field.value, item.id])
+                                        : field.onChange(
+                                            field.value?.filter(
+                                              (value) => value !== item.id
+                                            )
+                                          )
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className="font-normal cursor-pointer">
+                                  {item.label}
+                                </FormLabel>
+                              </FormItem>
+                            )
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
               <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
                 {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
                 Найти транспорт
@@ -293,8 +347,8 @@ export default function RentalCarPageContent() {
             <div>
               <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} вариантов</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                {paginatedCars.map((car, index) => (
-                  <CarCard key={`${car.slug}-${index}`} car={car} index={index} />
+                {paginatedTransport.map((transport, index) => (
+                  <TransportCard key={`${transport.slug}-${index}`} transport={transport} index={index} />
                 ))}
               </div>
             </div>
@@ -311,14 +365,14 @@ export default function RentalCarPageContent() {
               <div>
                   <h2 className="text-2xl font-headline font-bold mb-6">Популярные предложения</h2>
                   <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                      {paginatedCars.map((car, index) => (
-                          <CarCard key={`${car.slug}-${index}`} car={car} index={index} />
+                      {paginatedTransport.map((transport, index) => (
+                          <TransportCard key={`${transport.slug}-${index}`} transport={transport} index={index} />
                       ))}
                   </div>
               </div>
           )}
 
-          {!isLoading && currentCars.length > itemsPerPage && (
+          {!isLoading && currentTransport.length > itemsPerPage && (
                 <Pagination className="mt-8">
                     <PaginationContent>
                         <PaginationItem>

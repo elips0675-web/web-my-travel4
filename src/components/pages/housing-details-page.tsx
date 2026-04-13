@@ -240,19 +240,18 @@ export default function HousingDetailsPageContent({ slug }: { slug: string }) {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 xl:gap-12">
                 <div className="lg:col-span-2">
-                    <Tabs defaultValue="description" className="w-full">
-                        <TabsList className="grid w-full grid-cols-3 md:w-auto md:inline-flex">
-                            <TabsTrigger value="description">Описание</TabsTrigger>
+                    <div className="prose prose-stone dark:prose-invert max-w-none">
+                        <h2 className="font-headline font-bold text-2xl mb-4">О {recommendation.type.toLowerCase()}</h2>
+                        <p>{recommendation.description}</p>
+                    </div>
+                    <Separator className="my-6" />
+                    <Tabs defaultValue="amenities" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2 md:w-auto md:inline-flex">
                             <TabsTrigger value="amenities">Удобства</TabsTrigger>
                             <TabsTrigger value="reviews">Отзывы</TabsTrigger>
                         </TabsList>
-                        <Separator className="my-6" />
-                        <TabsContent value="description" className="prose prose-stone dark:prose-invert max-w-none">
-                            <h2 className="font-headline font-bold text-2xl mb-4">О {recommendation.type.toLowerCase()}</h2>
-                            <p>{recommendation.description}</p>
-                        </TabsContent>
-                        <TabsContent value="amenities">
-                             <h2 className="font-headline font-bold text-2xl mb-4">Что предлагает это место</h2>
+                        <TabsContent value="amenities" className="pt-6">
+                             <h3 className="font-headline font-bold text-2xl mb-4">Что предлагает это место</h3>
                              <div className="grid grid-cols-2 gap-4">
                                 {amenitiesMap.map((amenity) => {
                                     const isAvailable = recommendation.pros.some(pro => pro.toLowerCase().includes(amenity.keyword)) || recommendation.description.toLowerCase().includes(amenity.keyword);
@@ -265,8 +264,8 @@ export default function HousingDetailsPageContent({ slug }: { slug: string }) {
                                 })}
                              </div>
                         </TabsContent>
-                         <TabsContent value="reviews">
-                             <h2 className="font-headline font-bold text-2xl mb-4">Отзывы гостей</h2>
+                         <TabsContent value="reviews" className="pt-6">
+                             <h3 className="font-headline font-bold text-2xl mb-4">Отзывы гостей</h3>
                              <p className="text-muted-foreground">Здесь скоро появятся отзывы.</p>
                         </TabsContent>
                     </Tabs>

@@ -27,3 +27,4 @@ export function getFirebase() {
 export * from './provider';
 export * from './auth/use-user';
 export * from './auth/use-user-profile';
+export * from './firestore/use-collection';

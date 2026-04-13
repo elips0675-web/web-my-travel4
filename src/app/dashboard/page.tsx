@@ -1,15 +1,43 @@
 'use client';
 
-import { useUserProfile } from '@/firebase/auth/use-user-profile';
+import { useUser, useFirestore, useCollection } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
+import { collection, query, where } from 'firebase/firestore';
+import { useMemo } from 'react';
+import { useUserProfile } from '@/firebase/auth/use-user-profile';
+
+type Business = {
+    id: string;
+    name: string;
+    category: string;
+};
+
+const categoryLabels: Record<string, string> = {
+    tours: 'Туры',
+    housing: 'Жилье',
+    restaurants: 'Кафе и рестораны',
+    activities: 'Развлечения',
+    'rental-car': 'Транспорт'
+};
 
 export default function DashboardPage() {
-    const { userProfile, isLoading } = useUserProfile();
+    const { user, isLoading: isUserLoading } = useUser();
+    const { userProfile, isLoading: isProfileLoading } = useUserProfile();
     const router = useRouter();
+    const firestore = useFirestore();
+
+    const businessesQuery = useMemo(() => {
+        if (!user?.uid) return null;
+        return query(collection(firestore, "businesses"), where("ownerId", "==", user.uid));
+    }, [firestore, user?.uid]);
+
+    const { data: businesses, isLoading: isBusinessesLoading } = useCollection<Business>(businessesQuery);
+    
+    const isLoading = isUserLoading || isProfileLoading || isBusinessesLoading;
 
     if (isLoading) {
         return (
@@ -18,17 +46,16 @@ export default function DashboardPage() {
             </div>
         );
     }
+    
+    if (!isUserLoading && !user) {
+         router.push('/');
+         return null;
+    }
 
-    if (!userProfile?.isBusinessOwner) {
+    if (!isProfileLoading && !userProfile?.isBusinessOwner) {
         router.push('/');
         return null;
     }
-
-    // Mock businesses for now
-    const businesses = [
-        { id: '1', name: 'Тур по замкам', category: 'tours' },
-        { id: '2', name: 'Уютный отель "Лес"', category: 'housing' },
-    ];
 
     return (
         <div className="container mx-auto py-8">
@@ -50,13 +77,13 @@ export default function DashboardPage() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    {businesses.length > 0 ? (
+                    {businesses && businesses.length > 0 ? (
                         <div className="space-y-4">
                             {businesses.map((business) => (
                                 <div key={business.id} className="flex items-center justify-between rounded-lg border p-4">
                                     <div>
                                         <p className="font-semibold">{business.name}</p>
-                                        <p className="text-sm text-muted-foreground">{business.category}</p>
+                                        <p className="text-sm text-muted-foreground">{categoryLabels[business.category] || business.category}</p>
                                     </div>
                                     <Button variant="outline" size="sm">
                                         Управлять

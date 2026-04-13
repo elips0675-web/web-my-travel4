@@ -87,12 +87,12 @@ function ActivityCard({ recommendation, index }: { recommendation: Recommendatio
         <CardDescription>{recommendation.type}</CardDescription>
         <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{recommendation.name}</CardTitle>
       </CardHeader>
-      <CardContent className="flex flex-col flex-grow">
+      <CardContent>
         <div className="flex items-center text-sm text-muted-foreground mb-3">
             <MapPin className="w-4 h-4 mr-1.5" />
             {recommendation.location}
         </div>
-        <p className="text-sm text-muted-foreground mb-3 flex-grow line-clamp-2">{recommendation.description}</p>
+        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{recommendation.description}</p>
       </CardContent>
        <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
             <div>

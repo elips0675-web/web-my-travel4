@@ -4,7 +4,7 @@ import { useUser, useFirestore, useCollection } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Loader2, PlusCircle } from 'lucide-react';
+import { Loader2, PlusCircle, Briefcase } from 'lucide-react';
 import Link from 'next/link';
 import { collection, query, where } from 'firebase/firestore';
 import { useMemo, useEffect } from 'react';
@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
     return (
         <div className="container mx-auto py-8">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-2">
                 <h1 className="text-3xl font-bold font-headline">Панель управления</h1>
                 <Button asChild>
                     <Link href="/dashboard/new">
@@ -69,52 +69,52 @@ export default function DashboardPage() {
                     </Link>
                 </Button>
             </div>
+             <p className="text-muted-foreground mb-6">
+                Здесь отображаются ваши компании и предложения в виде доски объявлений.
+            </p>
 
-            <Card>
-                <CardHeader>
-                    <CardTitle>Мои бизнесы</CardTitle>
-                    <CardDescription>
-                        Здесь отображаются ваши компании и предложения в виде доски объявлений.
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    {businesses && businesses.length > 0 ? (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {businesses.map((business) => (
-                                <Card key={business.id} className="flex flex-col overflow-hidden">
-                                    <div className="relative aspect-[16/9] w-full">
-                                       <Image
-                                            src={business.imageUrl || 'https://placehold.co/600x400/EEE/31343C?text=No+Image'}
-                                            alt={business.name}
-                                            fill
-                                            className="object-cover"
-                                        />
-                                    </div>
-                                    <CardHeader>
-                                        <CardTitle>{business.name}</CardTitle>
-                                        <CardDescription>{categoryLabels[business.category] || business.category}</CardDescription>
-                                    </CardHeader>
-                                    <CardContent className="flex-grow">
-                                        <p className="text-sm text-muted-foreground line-clamp-3">{business.description}</p>
-                                    </CardContent>
-                                    <CardFooter>
-                                        <Button variant="outline" size="sm" className="w-full">
-                                            Управлять
-                                        </Button>
-                                    </CardFooter>
-                                </Card>
-                            ))}
-                        </div>
-                    ) : (
-                        <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                            <h3 className="text-lg font-semibold">У вас пока нет бизнесов</h3>
-                            <p className="mt-2 text-sm text-muted-foreground">
-                                Нажмите "Добавить бизнес", чтобы создать свое первое предложение.
-                            </p>
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
+            {businesses && businesses.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {businesses.map((business) => (
+                        <Card key={business.id} className="flex flex-col overflow-hidden rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300">
+                            <div className="relative aspect-[16/9] w-full">
+                               <Image
+                                    src={business.imageUrl || 'https://placehold.co/600x400/EEE/31343C?text=No+Image'}
+                                    alt={business.name}
+                                    fill
+                                    className="object-cover"
+                                />
+                            </div>
+                            <CardHeader>
+                                <CardTitle>{business.name}</CardTitle>
+                                <CardDescription>{categoryLabels[business.category] || business.category}</CardDescription>
+                            </CardHeader>
+                            <CardContent className="flex-grow">
+                                <p className="text-sm text-muted-foreground line-clamp-3">{business.description}</p>
+                            </CardContent>
+                            <CardFooter>
+                                <Button variant="outline" size="sm" className="w-full">
+                                    Управлять
+                                </Button>
+                            </CardFooter>
+                        </Card>
+                    ))}
+                </div>
+            ) : (
+                <div className="text-center py-20 border-2 border-dashed rounded-2xl bg-secondary/50">
+                    <Briefcase className="mx-auto h-12 w-12 text-muted-foreground" />
+                    <h3 className="mt-4 text-xl font-semibold">У вас пока нет бизнесов</h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                        Нажмите "Добавить бизнес", чтобы создать свое первое предложение.
+                    </p>
+                    <Button asChild className="mt-6">
+                        <Link href="/dashboard/new">
+                            <PlusCircle className="mr-2 h-4 w-4" />
+                            Добавить первое объявление
+                        </Link>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }

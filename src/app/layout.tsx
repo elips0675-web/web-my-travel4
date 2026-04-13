@@ -18,6 +18,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased min-h-screen bg-background')}>
         <header className="sticky top-0 z-50 flex h-16 items-center justify-between gap-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-sm sm:px-6">
@@ -41,6 +42,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </Link>
               <Link href="/rental-car" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Транспорт
+              </Link>
+              <Link href="/multi-filter" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+                Фильтр
               </Link>
             </nav>
           </div>

@@ -27,26 +27,26 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               <Compass className="h-6 w-6 text-primary" />
               <span className="font-headline text-xl font-bold text-foreground">Путевой Компас</span>
             </Link>
-            <nav className="hidden md:flex items-center gap-4">
-              <Link href="/tours" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+            <nav className="hidden md:flex items-center gap-6">
+              <Link href="/tours" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Туры
               </Link>
-              <Link href="/housing" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/housing" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Жилье
               </Link>
-              <Link href="/restaurants" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/restaurants" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Кафе и рестораны
               </Link>
-              <Link href="/activities" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/activities" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Развлечения
               </Link>
-              <Link href="/rental-car" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/rental-car" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Транспорт
               </Link>
-              <Link href="/multi-filter" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/multi-filter" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Фильтр
               </Link>
-              <Link href="/filter-map" className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground">
+              <Link href="/filter-map" className="text-base font-medium text-muted-foreground transition-colors hover:text-foreground">
                 Фильтр-карта
               </Link>
             </nav>

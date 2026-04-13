@@ -1,7 +1,7 @@
 'use client';
 import { useState, useMemo, useRef, useEffect } from 'react';
 import Image from 'next/image';
-import { APIProvider, Map, AdvancedMarker, InfoWindow } from '@vis.gl/react-google-maps';
+import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 import { cn } from '@/lib/utils';
 import { Luggage, Home, Coffee, Gamepad2, Car, Star, MapPin, Clock, Users, Filter, X, List, Locate, Search } from 'lucide-react';
 
@@ -152,13 +152,24 @@ const MapComponent = ({ items, activeItem, onMarkerClick, selectedCategories }: 
                     mapId="a2e4c8c2a3d3c1d"
                     onLoad={({map}) => setMap(map)}
                 >
-                    {items.map(item => (
-                        <AdvancedMarker
-                            key={item.id}
-                            position={item.coords}
-                            onClick={() => onMarkerClick(item)}
-                        />
-                    ))}
+                    {items.map(item => {
+                        const categoryConfig = categoryLabels[item.category as keyof typeof categoryLabels];
+                        const color = categoryConfig ? categoryConfig.color : 'blue';
+
+                        return (
+                            <AdvancedMarker
+                                key={item.id}
+                                position={item.coords}
+                                onClick={() => onMarkerClick(item)}
+                            >
+                                <Pin
+                                    background={color}
+                                    borderColor="white"
+                                    glyphColor="white"
+                                />
+                            </AdvancedMarker>
+                        );
+                    })}
                     {activeItem && (
                         <InfoWindow
                             position={activeItem.coords}
@@ -471,9 +482,6 @@ export default function FilterMapContent() {
                 {(viewMode === 'split' || viewMode === 'map') && (
                     <div className={cn('relative bg-gray-100', viewMode === 'split' ? 'flex-1' : 'w-full')}>
                         <MapComponent items={filteredData} activeItem={activeItem} onMarkerClick={setActiveItem} selectedCategories={selectedCategories} />
-                        <button onClick={() => setViewMode(viewMode === 'map' ? 'split' : 'map')} className="absolute top-4 left-4 md:hidden bg-white px-4 py-2 rounded-xl shadow-lg font-medium text-sm flex items-center gap-2">
-                           {viewMode === 'map' ? <><Icons.List /> Список</> : <><Icons.Map /> Карта</>}
-                        </button>
                     </div>
                 )}
             </div>

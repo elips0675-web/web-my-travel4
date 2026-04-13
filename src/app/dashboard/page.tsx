@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Loader2, PlusCircle } from 'lucide-react';
 import Link from 'next/link';
 import { collection, query, where } from 'firebase/firestore';
-import { useMemo } from 'react';
+import { useMemo, useEffect } from 'react';
 import { useUserProfile } from '@/firebase/auth/use-user-profile';
 
 type Business = {
@@ -39,22 +39,20 @@ export default function DashboardPage() {
     
     const isLoading = isUserLoading || isProfileLoading || isBusinessesLoading;
 
-    if (isLoading) {
+    useEffect(() => {
+        if (!isLoading) {
+            if (!user || !userProfile?.isBusinessOwner) {
+                router.push('/');
+            }
+        }
+    }, [isLoading, user, userProfile, router]);
+    
+    if (isLoading || !user || !userProfile?.isBusinessOwner) {
         return (
             <div className="flex h-screen items-center justify-center">
                 <Loader2 className="h-16 w-16 animate-spin text-primary" />
             </div>
         );
-    }
-    
-    if (!isUserLoading && !user) {
-         router.push('/');
-         return null;
-    }
-
-    if (!isProfileLoading && !userProfile?.isBusinessOwner) {
-        router.push('/');
-        return null;
     }
 
     return (

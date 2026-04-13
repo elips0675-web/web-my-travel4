@@ -5,6 +5,30 @@
       "description": "A beautiful travel landscape with mountains and a lake.",
       "imageUrl": "https://picsum.photos/seed/hero/1920/1080",
       "imageHint": "travel landscape"
+    },
+    {
+      "id": "activity-sailing",
+      "description": "Sailing boat on the open sea.",
+      "imageUrl": "https://picsum.photos/seed/sailing/600/400",
+      "imageHint": "sailing boat"
+    },
+    {
+      "id": "activity-hiking",
+      "description": "Person hiking in the mountains.",
+      "imageUrl": "https://picsum.photos/seed/hiking/600/400",
+      "imageHint": "mountain hiking"
+    },
+    {
+      "id": "activity-cooking",
+      "description": "People at a cooking class.",
+      "imageUrl": "https://picsum.photos/seed/cooking/600/400",
+      "imageHint": "cooking class"
+    },
+    {
+      "id": "activity-museum",
+      "description": "Inside of a modern art museum.",
+      "imageUrl": "https://picsum.photos/seed/museum/600/400",
+      "imageHint": "art museum"
     }
   ]
 }

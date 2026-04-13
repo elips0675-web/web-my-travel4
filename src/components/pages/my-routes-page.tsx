@@ -167,51 +167,96 @@ function HousingSearchForm() {
 
 export default function MyRoutesPageContent() {
     const heroImage = PlaceHolderImages.find(img => img.id === 'hero-banner');
+    
+    const activities = [
+        {
+            title: "Морские прогулки",
+            image: PlaceHolderImages.find(img => img.id === 'activity-sailing'),
+        },
+        {
+            title: "Треккинг в горах",
+            image: PlaceHolderImages.find(img => img.id === 'activity-hiking'),
+        },
+        {
+            title: "Кулинарные курсы",
+            image: PlaceHolderImages.find(img => img.id === 'activity-cooking'),
+        },
+        {
+            title: "Посещение музеев",
+            image: PlaceHolderImages.find(img => img.id === 'activity-museum'),
+        }
+    ];
 
     return (
-        <section>
-            <div className="relative h-[70vh] min-h-[500px] w-full flex items-center justify-center -mt-8 -mx-4 sm:-mx-6 lg:-mx-8">
-                <Image
-                    src={heroImage?.imageUrl || "https://picsum.photos/seed/hero/1920/1080"}
-                    alt={heroImage?.description || "Beautiful travel landscape"}
-                    fill
-                    className="object-cover"
-                    priority
-                    data-ai-hint={heroImage?.imageHint || "travel landscape"}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
-                <div className="relative z-10 flex flex-col items-center text-white text-center px-4 max-w-6xl mx-auto">
-                    <h1 className="text-4xl md:text-6xl font-bold font-headline !leading-tight">
-                        Откройте для себя следующее приключение
-                    </h1>
-                    <p className="mt-4 text-lg md:text-xl max-w-3xl">
-                        Найдите лучшие туры, отели и развлечения по всему миру, подобранные специально для вас.
-                    </p>
-                    <Card className="mt-8 w-full bg-white/10 backdrop-blur-lg border-white/20">
-                        <CardContent className="p-2 sm:p-4">
-                            <Tabs defaultValue="tours" className="w-full">
-                                <TabsList className="grid w-full grid-cols-2 bg-transparent p-0">
-                                    <TabsTrigger value="tours" className="text-white/80 data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-t-md rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary transition-none">
-                                        <Search className="mr-2" />Туры
-                                    </TabsTrigger>
-                                    <TabsTrigger value="housing" className="text-white/80 data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-t-md rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary transition-none">
-                                        <BedDouble className="mr-2" />Жилье
-                                    </TabsTrigger>
-                                </TabsList>
-                                <div className="bg-white/90 p-4 rounded-b-md">
-                                    <TabsContent value="tours" className="m-0">
-                                        <ToursSearchForm />
-                                    </TabsContent>
-                                    <TabsContent value="housing" className="m-0">
-                                        <HousingSearchForm />
-                                    </TabsContent>
-                                </div>
-                            </Tabs>
-                        </CardContent>
-                    </Card>
+        <>
+            <section>
+                <div className="relative h-[70vh] min-h-[500px] w-full flex items-center justify-center -mt-8 -mx-4 sm:-mx-6 lg:-mx-8">
+                    <Image
+                        src={heroImage?.imageUrl || "https://picsum.photos/seed/hero/1920/1080"}
+                        alt={heroImage?.description || "Beautiful travel landscape"}
+                        fill
+                        className="object-cover"
+                        priority
+                        data-ai-hint={heroImage?.imageHint || "travel landscape"}
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/20" />
+                    <div className="relative z-10 flex flex-col items-center text-white text-center px-4 max-w-6xl mx-auto">
+                        <h1 className="text-4xl md:text-6xl font-bold font-headline !leading-tight">
+                            Откройте для себя следующее приключение
+                        </h1>
+                        <p className="mt-4 text-lg md:text-xl max-w-3xl">
+                            Найдите лучшие туры, отели и развлечения по всему миру, подобранные специально для вас.
+                        </p>
+                        <Card className="mt-8 w-full bg-white/10 backdrop-blur-lg border-white/20">
+                            <CardContent className="p-2 sm:p-4">
+                                <Tabs defaultValue="tours" className="w-full">
+                                    <TabsList className="grid w-full grid-cols-2 bg-transparent p-0">
+                                        <TabsTrigger value="tours" className="text-white/80 data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-t-md rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary transition-none">
+                                            <Search className="mr-2" />Туры
+                                        </TabsTrigger>
+                                        <TabsTrigger value="housing" className="text-white/80 data-[state=active]:bg-white/20 data-[state=active]:text-white rounded-t-md rounded-b-none border-b-2 border-transparent data-[state=active]:border-primary transition-none">
+                                            <BedDouble className="mr-2" />Жилье
+                                        </TabsTrigger>
+                                    </TabsList>
+                                    <div className="bg-white/90 p-4 rounded-b-md">
+                                        <TabsContent value="tours" className="m-0">
+                                            <ToursSearchForm />
+                                        </TabsContent>
+                                        <TabsContent value="housing" className="m-0">
+                                            <HousingSearchForm />
+                                        </TabsContent>
+                                    </div>
+                                </Tabs>
+                            </CardContent>
+                        </Card>
+                    </div>
                 </div>
-            </div>
-            {/* Другие секции из шаблона будут добавлены здесь позже */}
-        </section>
+            </section>
+            
+            <section className="py-12 lg:py-20">
+                <div className="container mx-auto px-4">
+                    <h2 className="text-3xl md:text-4xl font-bold text-center font-headline mb-10">Популярные развлечения</h2>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                        {activities.map((activity, index) => (
+                            <Card key={index} className="overflow-hidden group shadow-lg hover:shadow-xl transition-shadow duration-300">
+                                <div className="relative h-64">
+                                    <Image
+                                        src={activity.image?.imageUrl || `https://picsum.photos/seed/${activity.title}/600/400`}
+                                        alt={activity.image?.description || activity.title}
+                                        fill
+                                        className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                        data-ai-hint={activity.image?.imageHint || activity.title.toLowerCase().replace(' ', '')}
+                                    />
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                                     <div className="absolute bottom-0 left-0 p-4">
+                                        <h3 className="font-bold font-headline text-lg text-white">{activity.title}</h3>
+                                    </div>
+                                </div>
+                            </Card>
+                        ))}
+                    </div>
+                </div>
+            </section>
+        </>
     );
 }

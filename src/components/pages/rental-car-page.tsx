@@ -64,90 +64,66 @@ const generateSlug = (name: string, index: number) => {
 
 function CarCard({ car, index }: { car: CarRecommendationWithSlug, index: number }) {
     return (
-      <Card className="group overflow-hidden">
-        <div className="relative overflow-hidden">
-          <Image
-            src={car.imageUrl || `https://picsum.photos/seed/car${index}/800/600`}
-            alt={car.name}
-            width={800}
-            height={600}
-            className="object-cover h-full w-full aspect-video group-hover:scale-105 transition-transform duration-300"
-            data-ai-hint={`${car.type.toLowerCase()} car`}
-          />
+      <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
+      <div className="relative h-48 overflow-hidden">
+        <Image
+          src={car.imageUrl || `https://picsum.photos/seed/car${index}/800/600`}
+          alt={car.name}
+          fill
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
+          data-ai-hint={`${car.type.toLowerCase()} car`}
+        />
+        <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1">
+          <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+          <span className="font-semibold text-card-foreground">{car.rating?.toFixed(1)}</span>
         </div>
-        <div className="p-4 space-y-4">
-            <div className="flex justify-between items-start">
-                <div>
-                    <CardDescription>{car.type}</CardDescription>
-                    <CardTitle className="font-headline text-xl group-hover:text-primary transition-colors">{car.name}</CardTitle>
-                </div>
-                {car.rating && (
-                    <div className="flex items-center gap-1 text-sm font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md">
-                        <Star className="w-4 h-4 fill-current" />
-                        <span>{car.rating.toFixed(1)}</span>
-                    </div>
-                )}
-            </div>
-            
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm text-muted-foreground border-t border-b py-4">
-                <div className="flex items-center gap-2">
-                    <Users className="w-4 h-4" />
-                    <span>{car.features.passengers}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <Briefcase className="w-4 h-4" />
-                    <span>{car.features.luggage}</span>
-                </div>
-                 <div className="flex items-center gap-2">
-                    <Cog className="w-4 h-4" />
-                    <span>{car.features.transmission}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                    <DoorClosed className="w-4 h-4" />
-                    <span>{car.features.doors}</span>
-                </div>
-            </div>
-
-            <div className="flex items-center justify-between">
-                <div>
-                    <span className="text-muted-foreground text-sm">От </span>
-                    <span className="font-bold text-xl">{car.pricePerDay}</span>
-                    <span className="text-muted-foreground text-sm"> / день</span>
-                </div>
-                <Button asChild>
-                    <Link href={`/rental-car/${car.slug}`}>Забронировать</Link>
-                </Button>
-            </div>
+      </div>
+      <CardHeader>
+        <CardDescription>{car.type} - {car.supplier}</CardDescription>
+        <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{car.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col flex-grow">
+        <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+          <div className="flex items-center gap-1.5"><Users className="w-4 h-4" /><span>{car.features.passengers}</span></div>
+          <div className="flex items-center gap-1.5"><Briefcase className="w-4 h-4" /><span>{car.features.luggage}</span></div>
+          <div className="flex items-center gap-1.5"><Cog className="w-4 h-4" /><span>{car.features.transmission}</span></div>
+          <div className="flex items-center gap-1.5"><DoorClosed className="w-4 h-4" /><span>{car.features.doors}</span></div>
         </div>
-      </Card>
+      </CardContent>
+      <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+        <div>
+          <span className="text-2xl font-bold text-primary">{car.pricePerDay}</span>
+          <span className="text-muted-foreground text-sm">/день</span>
+        </div>
+        <Button asChild>
+          <Link href={`/rental-car/${car.slug}`}>Подробнее</Link>
+        </Button>
+      </CardFooter>
+    </Card>
     );
 }
   
 function LoadingSkeleton() {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {Array.from({ length: 12 }).map((i) => (
-          <Card key={i} className="overflow-hidden">
+          <Card key={i} className="overflow-hidden rounded-2xl">
             <Skeleton className="h-48 w-full" />
-            <div className="p-4 space-y-4">
-                <div className="flex justify-between items-start">
-                    <div>
-                        <Skeleton className="h-4 w-20 mb-2" />
-                        <Skeleton className="h-6 w-32" />
-                    </div>
-                    <Skeleton className="h-6 w-12" />
+            <CardHeader>
+                <Skeleton className="h-4 w-2/3" />
+                <Skeleton className="h-6 w-1/2" />
+            </CardHeader>
+            <CardContent>
+                <div className="flex flex-wrap gap-4">
+                    <Skeleton className="h-5 w-1/4" />
+                    <Skeleton className="h-5 w-1/4" />
+                    <Skeleton className="h-5 w-1/4" />
                 </div>
-                <div className="grid grid-cols-4 gap-4 py-4 border-t border-b">
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                    <Skeleton className="h-6 w-full" />
-                </div>
-                <div className="flex justify-between items-center">
-                    <Skeleton className="h-8 w-24" />
-                    <Skeleton className="h-10 w-28" />
-                </div>
-            </div>
+            </CardContent>
+            <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+                <Skeleton className="h-8 w-1/3" />
+                <Skeleton className="h-10 w-1/3" />
+            </CardFooter>
           </Card>
         ))}
       </div>
@@ -316,7 +292,7 @@ export default function RentalCarPageContent() {
           {!isLoading && hasSearched && recommendations && recommendations.length > 0 && (
             <div>
               <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} вариантов</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                 {paginatedCars.map((car, index) => (
                   <CarCard key={`${car.slug}-${index}`} car={car} index={index} />
                 ))}
@@ -334,7 +310,7 @@ export default function RentalCarPageContent() {
           {!isLoading && !hasSearched && (
               <div>
                   <h2 className="text-2xl font-headline font-bold mb-6">Популярные предложения</h2>
-                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                       {paginatedCars.map((car, index) => (
                           <CarCard key={`${car.slug}-${index}`} car={car} index={index} />
                       ))}

@@ -58,37 +58,35 @@ const generateSlug = (name: string, index: number) => {
 
 function ActivityCard({ recommendation, index }: { recommendation: RecommendationWithSlug, index: number }) {
   return (
-    <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col">
-      <div className="relative aspect-video">
+    <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
+      <div className="relative h-48 overflow-hidden">
         <Image
           src={recommendation.imageUrl || `https://picsum.photos/seed/activity${index}/800/600`}
           alt={recommendation.name}
           fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
+          className="object-cover group-hover:scale-110 transition-transform duration-500"
           data-ai-hint={`${recommendation.type.toLowerCase()} activity`}
         />
-      </div>
-      <div className="p-4 flex-grow">
-        <div className="flex justify-between items-start mb-2">
-            <div>
-                <CardDescription>{recommendation.type}</CardDescription>
-                <CardTitle className="font-headline text-xl group-hover:text-primary transition-colors">{recommendation.name}</CardTitle>
+        {recommendation.rating && (
+            <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1">
+                <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <span className="font-semibold text-card-foreground">{recommendation.rating.toFixed(1)}</span>
             </div>
-            {recommendation.rating && (
-                <div className="flex items-center gap-1 text-sm font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span>{recommendation.rating.toFixed(1)}</span>
-                </div>
-            )}
-        </div>
-        <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{recommendation.description}</p>
-        <div className="text-sm text-muted-foreground flex items-center">
+        )}
+      </div>
+      <CardHeader>
+        <CardDescription>{recommendation.type}</CardDescription>
+        <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{recommendation.name}</CardTitle>
+      </CardHeader>
+      <CardContent className="flex flex-col flex-grow">
+        <div className="flex items-center text-sm text-muted-foreground mb-3">
             <MapPin className="w-4 h-4 mr-1.5" />
             {recommendation.location}
         </div>
-      </div>
-       <CardFooter className="bg-secondary/30 p-4 flex justify-between items-center mt-auto">
-            <div className="font-bold">{recommendation.price}</div>
+        <p className="text-sm text-muted-foreground mb-3 flex-grow line-clamp-2">{recommendation.description}</p>
+      </CardContent>
+       <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+            <div className="text-2xl font-bold text-primary">{recommendation.price}</div>
             <Button asChild>
                 <Link href={`/activities/${recommendation.slug}`}>Подробнее</Link>
             </Button>
@@ -101,21 +99,20 @@ function LoadingSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {Array.from({ length: 12 }).map((i) => (
-        <Card key={i} className="overflow-hidden flex flex-col">
+        <Card key={i} className="overflow-hidden flex flex-col rounded-2xl">
             <Skeleton className="h-48 w-full" />
-            <div className="p-4 space-y-3 flex-grow">
-                <div className="flex justify-between">
-                    <Skeleton className="h-4 w-1/3" />
-                    <Skeleton className="h-6 w-1/4" />
-                </div>
+            <CardHeader>
+                <Skeleton className="h-4 w-1/3" />
                 <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-10 w-full" />
+            </CardHeader>
+            <CardContent className="flex flex-col flex-grow gap-4">
                 <Skeleton className="h-4 w-1/2" />
-            </div>
-             <CardFooter className="bg-secondary/30 p-4 flex justify-between items-center mt-auto">
-                <Skeleton className="h-6 w-1/4" />
-                <Skeleton className="h-10 w-28" />
-             </CardFooter>
+                <Skeleton className="h-10 w-full" />
+            </CardContent>
+            <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+                <Skeleton className="h-8 w-1/3" />
+                <Skeleton className="h-10 w-1/3" />
+            </CardFooter>
         </Card>
       ))}
     </div>

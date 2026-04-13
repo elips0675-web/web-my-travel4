@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useState } from "react";
+import Image from 'next/image';
 
 import { Button } from "@/components/ui/button";
 import {
@@ -20,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarIcon, Loader2, Search, Star } from "lucide-react";
+import { CalendarIcon, Loader2, Search, Star, Clock, Users } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from 'date-fns/locale';
 import { aiTourRecommendations, type AiTourRecommendationsOutput } from '@/ai/flows/ai-tour-recommendations';
@@ -190,33 +191,51 @@ const mockToursWithSlugs: TourRecommendationWithSlug[] = mockTourData.map((tour,
     slug: generateSlug(tour.name, index),
 }));
 
-function TourCard({ tour }: { tour: TourRecommendationWithSlug }) {
-  return (
-    <Card className="flex flex-col group transition-shadow hover:shadow-xl">
-        <CardHeader>
-            <div className="flex justify-between items-start gap-4">
-                <CardTitle className="font-headline text-xl group-hover:text-primary transition-colors">{tour.name}</CardTitle>
-                <div className="flex items-center gap-1 text-sm font-bold text-amber-500 bg-amber-500/10 px-2 py-1 rounded-md shrink-0">
-                    <Star className="w-4 h-4 fill-current" />
-                    <span>{ (tour.relevanceScore / 20).toFixed(1) }</span>
+function TourCard({ tour, index }: { tour: TourRecommendationWithSlug, index: number }) {
+    const rating = tour.relevanceScore / 20;
+    return (
+        <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
+            <div className="relative h-48 overflow-hidden">
+                <Image
+                    src={tour.galleryImageUrls[0] || `https://picsum.photos/seed/tour${index}/800/600`}
+                    alt={tour.name}
+                    fill
+                    className="object-cover group-hover:scale-110 transition-transform duration-500"
+                    data-ai-hint={tour.type}
+                />
+                <div className="absolute top-3 right-3 bg-card/90 backdrop-blur px-2 py-1 rounded-lg flex items-center gap-1">
+                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                    <span className="font-semibold text-card-foreground">{rating.toFixed(1)}</span>
                 </div>
             </div>
-            <CardDescription className="capitalize">{tour.type}</CardDescription>
-        </CardHeader>
-        <CardContent className="flex-grow">
-            <p className="text-sm text-muted-foreground line-clamp-3">{tour.description}</p>
-        </CardContent>
-        <CardFooter className="flex justify-between items-center bg-secondary/30 mt-auto pt-4">
-            <div className="flex flex-col">
-                <span className="text-xs text-muted-foreground">Цена от</span>
-                <span className="font-bold text-lg">{tour.priceRange}</span>
-            </div>
-            <Button asChild>
-                <Link href={`/tours/${tour.slug}`}>Подробнее</Link>
-            </Button>
-        </CardFooter>
-    </Card>
-  )
+            <CardHeader>
+                <CardDescription>{tour.type}</CardDescription>
+                <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{tour.name}</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col flex-grow">
+                <p className="text-sm text-muted-foreground mb-3 flex-grow line-clamp-2">{tour.description}</p>
+                 <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4" />
+                        <span>{tour.duration}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                        <Users className="w-4 h-4" />
+                        <span>{tour.groupSize}</span>
+                    </div>
+                </div>
+            </CardContent>
+            <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+                <div>
+                    <span className="text-2xl font-bold text-primary">{tour.priceRange}</span>
+                    <span className="text-muted-foreground text-sm"> / чел.</span>
+                </div>
+                <Button asChild>
+                    <Link href={`/tours/${tour.slug}`}>Подробнее</Link>
+                </Button>
+            </CardFooter>
+        </Card>
+    );
 }
 
 
@@ -224,17 +243,22 @@ function LoadingSkeleton() {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {Array.from({ length: 12 }).map((_, i) => (
-                <Card key={i} className="flex flex-col">
+                <Card key={i} className="overflow-hidden flex flex-col rounded-2xl">
+                    <Skeleton className="h-48 w-full" />
                     <CardHeader>
-                        <Skeleton className="h-6 w-3/4 mb-2" />
-                        <Skeleton className="h-4 w-1/4" />
+                        <Skeleton className="h-4 w-1/3" />
+                        <Skeleton className="h-6 w-3/4" />
                     </CardHeader>
-                    <CardContent>
-                        <Skeleton className="h-12 w-full" />
+                    <CardContent className="flex flex-col flex-grow gap-4">
+                        <Skeleton className="h-10 w-full" />
+                        <div className="flex gap-4">
+                            <Skeleton className="h-5 w-1/2" />
+                            <Skeleton className="h-5 w-1/2" />
+                        </div>
                     </CardContent>
-                    <CardFooter className="flex justify-between items-center bg-secondary/30 mt-auto pt-4">
+                    <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
                         <Skeleton className="h-8 w-1/3" />
-                        <Skeleton className="h-10 w-1/4" />
+                        <Skeleton className="h-10 w-1/3" />
                     </CardFooter>
                 </Card>
             ))}
@@ -405,7 +429,7 @@ export default function ToursPageContent() {
                     <h2 className="text-2xl font-headline font-bold mb-6">Популярные туры</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                         {paginatedTours.map((tour, index) => (
-                            <TourCard key={index} tour={tour} />
+                            <TourCard key={index} tour={tour} index={index} />
                         ))}
                     </div>
                 </div>
@@ -416,7 +440,7 @@ export default function ToursPageContent() {
                 <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} туров</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
                     {paginatedTours.map((tour, index) => (
-                    <TourCard key={index} tour={tour} />
+                    <TourCard key={index} tour={tour} index={index} />
                     ))}
                 </div>
                 </div>

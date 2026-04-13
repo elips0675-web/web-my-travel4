@@ -1,12 +1,15 @@
 import type { ReactNode } from 'react';
 import '@/app/globals.css';
 import { Button } from '@/components/ui/button';
-import { Compass, PlusCircle, Menu, User } from 'lucide-react';
+import { Compass, PlusCircle, Menu } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import PwaInstallBanner from '@/components/pwa-install-banner';
+import { FirebaseClientProvider } from '@/firebase/client-provider';
+import { AuthButton } from '@/components/auth-button';
+import { AuthDialog } from '@/components/auth-dialog';
 
 export const metadata = {
   title: 'Путевой Компас',
@@ -25,102 +28,95 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
       </head>
       <body className={cn('font-body antialiased min-h-screen bg-background')}>
-        <header className="sticky top-0 z-50 flex h-16 items-center justify-between gap-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-sm sm:px-6">
-          <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2">
-              <Compass className="h-6 w-6 text-primary" />
-              <span className="font-headline text-xl font-bold text-foreground">Путевой Компас</span>
-            </Link>
-            <nav className="hidden md:flex items-center gap-x-8">
-              <Link href="/tours" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Туры
+        <FirebaseClientProvider>
+          <header className="sticky top-0 z-50 flex h-16 items-center justify-between gap-4 border-b border-border/40 bg-background/80 px-4 backdrop-blur-sm sm:px-6">
+            <div className="flex items-center gap-6">
+              <Link href="/" className="flex items-center gap-2">
+                <Compass className="h-6 w-6 text-primary" />
+                <span className="font-headline text-xl font-bold text-foreground">Путевой Компас</span>
               </Link>
-              <Link href="/housing" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Жилье
-              </Link>
-              <Link href="/restaurants" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Кафе и рестораны
-              </Link>
-              <Link href="/activities" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Развлечения
-              </Link>
-              <Link href="/rental-car" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Транспорт
-              </Link>
-              <Link href="/multi-filter" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Фильтр
-              </Link>
-              <Link href="/filter-map" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                Фильтр-карта
-              </Link>
-            </nav>
-          </div>
-          <div className="flex items-center gap-4">
-            <Button asChild className="hidden md:flex">
-              <Link href="/routes/new">
-                <PlusCircle className="mr-2 h-4 w-4" />
-                Новый маршрут
-              </Link>
-            </Button>
-             <Button asChild variant="ghost" size="icon" className="hidden md:inline-flex rounded-full">
-                <Link href="/profile">
-                    <User className="h-5 w-5" />
-                    <span className="sr-only">Профиль</span>
+              <nav className="hidden md:flex items-center gap-x-8">
+                <Link href="/tours" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Туры
                 </Link>
-            </Button>
-            <div className="md:hidden">
-              <Sheet>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon">
-                    <Menu className="h-5 w-5" />
-                    <span className="sr-only">Открыть меню</span>
-                  </Button>
-                </SheetTrigger>
-                <SheetContent side="left">
-                  <SheetHeader>
-                    <SheetTitle>Мобильное меню</SheetTitle>
-                    <SheetDescription>
-                      Навигация по сайту. Выберите один из пунктов для перехода на соответствующую страницу.
-                    </SheetDescription>
-                  </SheetHeader>
-                  <nav className="grid gap-6 text-lg font-medium mt-8">
-                    <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
-                      <Compass className="h-6 w-6 text-primary" />
-                      <span>Путевой Компас</span>
-                    </Link>
-                    <Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link>
-                    <Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link>
-                    <Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Кафе и рестораны</Link>
-                    <Link href="/activities" className="text-muted-foreground hover:text-foreground">Развлечения</Link>
-                    <Link href="/rental-car" className="text-muted-foreground hover:text-foreground">Транспорт</Link>
-                    <Link href="/multi-filter" className="text-muted-foreground hover:text-foreground">Фильтр</Link>
-                    <Link href="/filter-map" className="text-muted-foreground hover:text-foreground">Фильтр-карта</Link>
-                    <Link href="/profile" className="text-muted-foreground hover:text-foreground">Профиль</Link>
-                  </nav>
-                  <div className="absolute bottom-8 left-6 right-6 flex items-center gap-2">
-                     <Button asChild className="flex-1">
-                        <Link href="/routes/new">
-                           <PlusCircle className="mr-2 h-4 w-4" />
-                           Новый маршрут
-                        </Link>
-                     </Button>
-                      <Button asChild variant="secondary" size="icon">
-                        <Link href="/profile">
-                            <User className="h-5 w-5" />
-                            <span className="sr-only">Профиль</span>
-                        </Link>
-                    </Button>
-                  </div>
-                </SheetContent>
-              </Sheet>
+                <Link href="/housing" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Жилье
+                </Link>
+                <Link href="/restaurants" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Кафе и рестораны
+                </Link>
+                <Link href="/activities" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Развлечения
+                </Link>
+                <Link href="/rental-car" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Транспорт
+                </Link>
+                <Link href="/multi-filter" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Фильтр
+                </Link>
+                <Link href="/filter-map" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Фильтр-карта
+                </Link>
+              </nav>
             </div>
-          </div>
-        </header>
-        <main className="flex-1">
-          {children}
-        </main>
-        <PwaInstallBanner />
-        <Toaster />
+            <div className="flex items-center gap-4">
+              <Button asChild className="hidden md:flex">
+                <Link href="/routes/new">
+                  <PlusCircle className="mr-2 h-4 w-4" />
+                  Новый маршрут
+                </Link>
+              </Button>
+              <div className="hidden md:inline-flex">
+                <AuthButton />
+              </div>
+              <div className="md:hidden">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="icon">
+                      <Menu className="h-5 w-5" />
+                      <span className="sr-only">Открыть меню</span>
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side="left">
+                    <SheetHeader>
+                      <SheetTitle>Мобильное меню</SheetTitle>
+                      <SheetDescription>
+                        Навигация по сайту. Выберите один из пунктов для перехода на соответствующую страницу.
+                      </SheetDescription>
+                    </SheetHeader>
+                    <nav className="grid gap-6 text-lg font-medium mt-8">
+                      <Link href="/" className="flex items-center gap-2 text-lg font-semibold mb-4">
+                        <Compass className="h-6 w-6 text-primary" />
+                        <span>Путевой Компас</span>
+                      </Link>
+                      <Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link>
+                      <Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link>
+                      <Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Кафе и рестораны</Link>
+                      <Link href="/activities" className="text-muted-foreground hover:text-foreground">Развлечения</Link>
+                      <Link href="/rental-car" className="text-muted-foreground hover:text-foreground">Транспорт</Link>
+                      <Link href="/multi-filter" className="text-muted-foreground hover:text-foreground">Фильтр</Link>
+                      <Link href="/filter-map" className="text-muted-foreground hover:text-foreground">Фильтр-карта</Link>
+                    </nav>
+                    <div className="absolute bottom-8 left-6 right-6 flex items-center gap-2">
+                       <Button asChild className="flex-1">
+                          <Link href="/routes/new">
+                             <PlusCircle className="mr-2 h-4 w-4" />
+                             Новый маршрут
+                          </Link>
+                       </Button>
+                       <AuthButton />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+            </div>
+          </header>
+          <main className="flex-1">
+            {children}
+          </main>
+          <PwaInstallBanner />
+          <Toaster />
+        </FirebaseClientProvider>
       </body>
     </html>
   );

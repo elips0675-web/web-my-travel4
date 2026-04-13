@@ -57,6 +57,15 @@ const generateSlug = (name: string, index: number) => {
 
 
 function ActivityCard({ recommendation, index }: { recommendation: RecommendationWithSlug, index: number }) {
+  const priceString = recommendation.price;
+  let fromText = '';
+  let mainPrice = priceString;
+
+  if (priceString.toLowerCase().startsWith('от ')) {
+    fromText = priceString.substring(0, 2); // "от"
+    mainPrice = priceString.substring(3); // e.g. "30 BYN/час"
+  }
+  
   return (
     <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
       <div className="relative h-48 overflow-hidden">
@@ -86,7 +95,10 @@ function ActivityCard({ recommendation, index }: { recommendation: Recommendatio
         <p className="text-sm text-muted-foreground mb-3 flex-grow line-clamp-2">{recommendation.description}</p>
       </CardContent>
        <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
-            <div className="text-2xl font-bold text-primary">{recommendation.price}</div>
+            <div>
+              {fromText && <span className="text-sm text-muted-foreground mr-1">{fromText}</span>}
+              <span className="text-2xl font-bold text-primary">{mainPrice}</span>
+            </div>
             <Button asChild>
                 <Link href={`/activities/${recommendation.slug}`}>Подробнее</Link>
             </Button>
@@ -98,8 +110,8 @@ function ActivityCard({ recommendation, index }: { recommendation: Recommendatio
 function LoadingSkeleton() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {Array.from({ length: 12 }).map((i) => (
-        <Card key={i} className="overflow-hidden flex flex-col rounded-2xl">
+      {Array.from({ length: 12 }).map((i, index) => (
+        <Card key={index} className="overflow-hidden flex flex-col rounded-2xl">
             <Skeleton className="h-48 w-full" />
             <CardHeader>
                 <Skeleton className="h-4 w-1/3" />

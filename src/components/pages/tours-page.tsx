@@ -67,7 +67,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["Колизей", "Римский форум", "Пантеон"],
         included: ["Гид", "Наушники"],
         excluded: ["Входные билеты", "Еда и напитки"],
-        galleryImageUrls: ["https://picsum.photos/seed/rome-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/rome-tour-1/800/600",
+            "https://picsum.photos/seed/rome-tour-2/800/600",
+            "https://picsum.photos/seed/rome-tour-3/800/600"
+        ]
     },
     {
         name: "Гастрономический тур по Токио",
@@ -81,7 +85,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["Рынок Цукидзи", "Дегустация саке", "Мастер-класс по суши"],
         included: ["Гид", "Дегустации"],
         excluded: ["Обед", "Транспорт"],
-        galleryImageUrls: ["https://picsum.photos/seed/tokyo-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/tokyo-tour-1/800/600",
+            "https://picsum.photos/seed/tokyo-tour-2/800/600",
+            "https://picsum.photos/seed/tokyo-tour-3/800/600"
+        ]
     },
     {
         name: "Полет на вертолете над Гранд-Каньоном",
@@ -95,7 +103,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["Вид на плотину Гувера", "Полет над каньоном", "Фото-остановки"],
         included: ["Полет", "Трансфер из отеля"],
         excluded: ["Сборы национального парка"],
-        galleryImageUrls: ["https://picsum.photos/seed/canyon-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/canyon-tour-1/800/600",
+            "https://picsum.photos/seed/canyon-tour-2/800/600",
+            "https://picsum.photos/seed/canyon-tour-3/800/600"
+        ]
     },
     {
         name: "Винный тур по Тоскане",
@@ -109,7 +121,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["Дегустация вина Кьянти", "Посещение 2 виноделен", "Обед на ферме"],
         included: ["Транспорт", "Дегустации", "Обед"],
         excluded: ["Личные расходы"],
-        galleryImageUrls: ["https://picsum.photos/seed/tuscany-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/tuscany-tour-1/800/600",
+            "https://picsum.photos/seed/tuscany-tour-2/800/600",
+            "https://picsum.photos/seed/tuscany-tour-3/800/600"
+        ]
     },
      {
         name: "Дайвинг на Большом Барьерном рифе",
@@ -123,7 +139,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["2 погружения с аквалангом", "Снорклинг", "Обед на катамаране"],
         included: ["Оборудование", "Инструктаж", "Обед"],
         excluded: ["Подводные фотографии"],
-        galleryImageUrls: ["https://picsum.photos/seed/diving-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/diving-tour-1/800/600",
+            "https://picsum.photos/seed/diving-tour-2/800/600",
+            "https://picsum.photos/seed/diving-tour-3/800/600"
+        ]
     },
     {
         name: "Посещение Лувра с гидом",
@@ -137,7 +157,11 @@ const mockTourData: AiTourRecommendationsOutput = [
         highlights: ["Мона Лиза", "Венера Милосская", "Ника Самофракийская"],
         included: ["Гид", "Приоритетный вход"],
         excluded: ["Доступ на временные выставки"],
-        galleryImageUrls: ["https://picsum.photos/seed/louvre-tour/800/600"]
+        galleryImageUrls: [
+            "https://picsum.photos/seed/louvre-tour-1/800/600",
+            "https://picsum.photos/seed/louvre-tour-2/800/600",
+            "https://picsum.photos/seed/louvre-tour-3/800/600"
+        ]
     }
 ];
 const mockToursWithSlugs: TourRecommendationWithSlug[] = mockTourData.map((tour, index) => ({

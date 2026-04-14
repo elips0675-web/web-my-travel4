@@ -60,12 +60,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </nav>
             </div>
             <div className="flex items-center gap-4">
-              <Button asChild className="hidden md:flex">
-                <Link href="/routes/new">
-                  <PlusCircle className="mr-2 h-4 w-4" />
-                  Новый маршрут
-                </Link>
-              </Button>
               <Button asChild variant="ghost" size="icon" className="hidden md:inline-flex">
                 <Link href="/notifications">
                     <Bell className="h-5 w-5" />
@@ -104,13 +98,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       <Link href="/filter-map" className="text-muted-foreground hover:text-foreground">Фильтр-карта</Link>
                       <Link href="/notifications" className="text-muted-foreground hover:text-foreground">Уведомления</Link>
                     </nav>
-                    <div className="absolute bottom-8 left-6 right-6 flex items-center gap-2">
-                       <Button asChild className="flex-1">
-                          <Link href="/routes/new">
-                             <PlusCircle className="mr-2 h-4 w-4" />
-                             Новый маршрут
-                          </Link>
-                       </Button>
+                    <div className="absolute bottom-8 left-6 right-6 flex items-center justify-end gap-2">
                         <Button asChild variant="ghost" size="icon">
                             <Link href="/notifications">
                                 <Bell className="h-5 w-5" />
@@ -124,9 +112,19 @@ export default function RootLayout({ children }: { children: ReactNode }) {
               </div>
             </div>
           </header>
-          <main className="flex-1">
+          <main className="flex-1 pb-24 md:pb-8">
             {children}
           </main>
+          
+          <div className="fixed bottom-6 left-6 z-50">
+            <Button asChild className="h-16 w-16 rounded-full p-0 shadow-lg md:h-11 md:w-auto md:px-6 md:py-2 md:rounded-lg">
+                <Link href="/routes/new">
+                    <PlusCircle className="h-8 w-8 md:h-4 md:w-4 md:mr-2" />
+                    <span className="hidden md:inline">Новый маршрут</span>
+                </Link>
+            </Button>
+          </div>
+
           <PwaInstallBanner />
           <Toaster />
         </FirebaseClientProvider>

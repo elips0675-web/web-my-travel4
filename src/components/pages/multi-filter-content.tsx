@@ -349,7 +349,7 @@ export default function MultiFilterContent() {
                             TravelFinder
                         </h1>
                         <div className="flex items-center gap-2">
-                             <Button asChild className="hidden lg:inline-flex">
+                            <Button asChild>
                                 <Link href={`/routes/new?${newRouteParams.toString()}`}>
                                     <PlusCircle className="mr-2 h-4 w-4" />
                                     Новый маршрут

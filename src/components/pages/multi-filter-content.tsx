@@ -1,9 +1,11 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Search, Star, MapPin, Clock, Users, Filter, X, ChevronDown } from 'lucide-react';
+import { Search, Star, MapPin, Clock, Users, Filter, X, ChevronDown, PlusCircle } from 'lucide-react';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
 
 // Иконки
 const Icons = {
@@ -280,11 +282,17 @@ export default function MultiFilterContent() {
         setSearchQuery('');
     };
 
+    const newRouteParams = new URLSearchParams();
+    selectedCategories.forEach(cat => newRouteParams.append('category', cat));
+    if (searchQuery) {
+        newRouteParams.append('destination', searchQuery);
+    }
+
     // Фильтрация данных
     const filteredData = useMemo(() => {
         return mockData.filter(item => {
             if (!selectedCategories.includes(item.category)) return false;
-            if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase())) {
+            if (searchQuery && !item.title.toLowerCase().includes(searchQuery.toLowerCase()) && !item.location.toLowerCase().includes(searchQuery.toLowerCase())) {
                 return false;
             }
             const categoryFilters = activeFilters[item.category];
@@ -340,25 +348,33 @@ export default function MultiFilterContent() {
                         <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
                             TravelFinder
                         </h1>
-                        <button 
-                            onClick={() => setShowMobileFilters(!showMobileFilters)}
-                            className="lg:hidden flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-xl font-medium"
-                        >
-                            <Filter className="w-5 h-5" />
-                            Фильтры
-                            {activeFilterCount > 0 && (
-                                <span className="bg-indigo-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                                    {activeFilterCount}
-                                </span>
-                            )}
-                        </button>
+                        <div className="flex items-center gap-2">
+                             <Button asChild className="hidden lg:inline-flex">
+                                <Link href={`/routes/new?${newRouteParams.toString()}`}>
+                                    <PlusCircle className="mr-2 h-4 w-4" />
+                                    Новый маршрут
+                                </Link>
+                            </Button>
+                            <button 
+                                onClick={() => setShowMobileFilters(!showMobileFilters)}
+                                className="lg:hidden flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-xl font-medium"
+                            >
+                                <Filter className="w-5 h-5" />
+                                Фильтры
+                                {activeFilterCount > 0 && (
+                                    <span className="bg-indigo-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                                        {activeFilterCount}
+                                    </span>
+                                )}
+                            </button>
+                        </div>
                     </div>
                     
                     {/* Search */}
                     <div className="relative max-w-2xl">
                         <input
                             type="text"
-                            placeholder="Поиск по названию..."
+                            placeholder="Поиск по названию или пункту назначения..."
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className="w-full pl-12 pr-4 py-3 bg-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-all"
@@ -370,7 +386,7 @@ export default function MultiFilterContent() {
 
             <div className="max-w-7xl mx-auto px-4 py-6">
                 {/* Category Tabs */}
-                <div className="flex gap-3 overflow-x-auto scrollbar-hide pb-4 mb-6">
+                <div className="flex flex-wrap justify-center gap-3 pb-4 mb-6">
                     {Object.entries(categoryLabels).map(([key, { label, icon: Icon, color }]) => {
                         const isActive = selectedCategories.includes(key);
                         return (

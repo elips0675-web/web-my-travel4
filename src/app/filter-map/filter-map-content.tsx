@@ -3,8 +3,7 @@ import { useState, useMemo, useRef, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { APIProvider, Map, AdvancedMarker, InfoWindow, Pin } from '@vis.gl/react-google-maps';
 import { cn } from '@/lib/utils';
-import { Luggage, Home, Coffee, Gamepad2, Car, Star, MapPin, Clock, Users, Filter, X, List, Locate, Search, Share2, ArrowUp } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Luggage, Home, Coffee, Gamepad2, Car, Star, MapPin, Clock, Users, Filter, X, List, Locate, Search, ArrowUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
 // Icons
@@ -369,7 +368,6 @@ export default function FilterMapContent() {
     const listRef = useRef<HTMLDivElement>(null);
     const asideRef = useRef<HTMLElement>(null);
     const [showScrollToTop, setShowScrollToTop] = useState(false);
-    const { toast } = useToast();
 
     const handleScroll = useCallback(() => {
         const listScroll = listRef.current?.scrollTop ?? 0;
@@ -385,23 +383,6 @@ export default function FilterMapContent() {
     const scrollToTop = () => {
         listRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
         asideRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    const handleShare = () => {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Интерактивная карта - Путевой Компас',
-                text: 'Посмотрите, что я нашел на карте!',
-                url: window.location.href,
-            })
-            .catch((error) => console.log('Ошибка при попытке поделиться:', error));
-        } else {
-            navigator.clipboard.writeText(window.location.href);
-            toast({
-                title: 'Ссылка скопирована',
-                description: 'Вы можете поделиться ссылкой на эту карту.',
-            });
-        }
     };
 
     const toggleCategory = (category: string) => {
@@ -530,9 +511,6 @@ export default function FilterMapContent() {
                         <ArrowUp className="h-6 w-6" />
                     </Button>
                 )}
-                <Button onClick={handleShare} size="icon" variant="secondary" className="rounded-full shadow-lg h-14 w-14">
-                    <Share2 className="h-6 w-6" />
-                </Button>
             </div>
         </div>
     );

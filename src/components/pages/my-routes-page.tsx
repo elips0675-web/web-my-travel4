@@ -9,6 +9,7 @@ import { ru } from 'date-fns/locale';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from "react";
+import { routes as mockRoutes } from '@/lib/data';
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
@@ -21,10 +22,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Search, MapPin, Star, ShieldCheck, Users, Briefcase, Award, Cog, DoorClosed, Luggage, Home, Utensils, Gamepad2, Car, Mail } from "lucide-react";
+import { CalendarIcon, Search, MapPin, Star, ShieldCheck, Users, Briefcase, Award, Cog, DoorClosed, Luggage, Home, Utensils, Gamepad2, Car, Mail, PlusCircle } from "lucide-react";
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { AiTourRecommendationsOutput } from "@/ai/flows/ai-tour-recommendations";
-import type { AiHousingRecommendationsOutput } from '@/ai/flows/ai-housing-recommendations-flow';
+import type { AiHousingRecommendationsOutput } from "@/ai/flows/ai-housing-recommendations-flow";
 import type { AiRestaurantRecommendationsOutput } from "@/ai/flows/ai-restaurant-recommendations";
 import type { AiActivityRecommendationsOutput } from "@/ai/flows/ai-activity-recommendations";
 import type { AiRentalCarRecommendationsOutput } from "@/ai/flows/ai-rental-car-recommendations";
@@ -64,6 +65,59 @@ function SubscriptionDialog() {
             </DialogContent>
         </Dialog>
     );
+}
+
+// This is the component for displaying existing routes.
+function MyRoutes() {
+  return (
+    <section className="py-16 lg:py-24">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-start mb-8">
+          <div className="space-y-2">
+            <h2 className="text-4xl md:text-5xl font-bold font-headline">Мои маршруты</h2>
+            <p className="text-lg text-muted-foreground">Здесь собраны все ваши запланированные путешествия.</p>
+          </div>
+          <Button asChild size="lg">
+            <Link href="/routes/new">
+              <PlusCircle className="mr-2 h-5 w-5" />
+              Создать маршрут
+            </Link>
+          </Button>
+        </div>
+        {mockRoutes.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {mockRoutes.map(route => (
+              <Link href={`/routes/${route.id}`} key={route.id} className="group">
+                <Card className="h-full flex flex-col overflow-hidden shadow-md hover:shadow-xl hover:border-primary/50 transition-all duration-300">
+                  <CardHeader>
+                    <CardTitle className="font-headline group-hover:text-primary transition-colors">{route.name}</CardTitle>
+                    <CardDescription className="flex items-center gap-2">
+                      <MapPin className="h-4 w-4" /> {route.destination}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="flex-grow">
+                    <p className="text-sm text-muted-foreground">
+                      Маршрут из {route.places.length} точек.
+                    </p>
+                  </CardContent>
+                  <CardFooter>
+                    <div className="flex items-center text-sm text-muted-foreground gap-2">
+                        <Calendar className="h-4 w-4" />
+                        <span>{new Date(route.startDate).toLocaleDateString('ru-RU')} - {new Date(route.endDate).toLocaleDateString('ru-RU')}</span>
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="text-center py-20 border-2 border-dashed rounded-2xl bg-secondary/50">
+            <p className="text-muted-foreground">У вас пока нет маршрутов.</p>
+          </div>
+        )}
+      </div>
+    </section>
+  )
 }
 
 export default function MyRoutesPageContent() {
@@ -227,6 +281,8 @@ export default function MyRoutesPageContent() {
                 </div>
             </section>
             
+            <MyRoutes />
+
             <section className="py-16 lg:py-24">
                 <div className="container mx-auto px-4">
                     <div className="text-center max-w-2xl mx-auto mb-12">

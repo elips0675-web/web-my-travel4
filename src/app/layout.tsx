@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
 import '@/app/globals.css';
 import { Button } from '@/components/ui/button';
-import { Compass, PlusCircle, Menu, Bell } from 'lucide-react';
+import { Compass, Menu, Bell } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
@@ -116,15 +116,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             {children}
           </main>
           
-          <div className="fixed bottom-6 left-6 z-50">
-            <Button asChild className="h-16 w-16 rounded-full p-0 shadow-lg md:h-11 md:w-auto md:px-6 md:py-2 md:rounded-lg">
-                <Link href="/routes/new">
-                    <PlusCircle className="h-8 w-8 md:h-4 md:w-4 md:mr-2" />
-                    <span className="hidden md:inline">Новый маршрут</span>
-                </Link>
-            </Button>
-          </div>
-
           <PwaInstallBanner />
           <Toaster />
         </FirebaseClientProvider>

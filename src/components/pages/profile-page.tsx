@@ -45,12 +45,12 @@ const TravelerProfile = ({ user, interests }: { user: any, interests: string[] }
             <div className="space-y-4">
                 <Label htmlFor="name" className="font-semibold text-lg">Личная информация</Label>
                 <div className="grid gap-4">
-                    <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="name" className="text-right">Имя</Label>
+                    <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="sm:text-right">Имя</Label>
                         <Input id="name" defaultValue={user.displayName || ''} className="col-span-3" placeholder="Ваше имя" readOnly={!user.uid} />
                     </div>
-                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="email" className="text-right">Email</Label>
+                     <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                        <Label htmlFor="email" className="sm:text-right">Email</Label>
                         <Input id="email" type="email" defaultValue={user.email || ''} className="col-span-3" readOnly/>
                     </div>
                 </div>
@@ -109,12 +109,12 @@ const BusinessProfile = ({ user, interests }: { user: any, interests: string[] }
         <div>
             <h3 className="font-semibold text-lg mb-4">Информация о компании</h3>
              <div className="grid gap-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="name" className="text-right">Имя</Label>
+                <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="sm:text-right">Имя</Label>
                     <Input id="name" defaultValue={user.displayName || ''} className="col-span-3" placeholder="Ваше имя" readOnly={!user.uid} />
                 </div>
-                 <div className="grid grid-cols-4 items-center gap-4">
-                    <Label htmlFor="email" className="text-right">Email</Label>
+                 <div className="grid grid-cols-1 sm:grid-cols-4 items-center gap-4">
+                    <Label htmlFor="email" className="sm:text-right">Email</Label>
                     <Input id="email" type="email" defaultValue={user.email || ''} className="col-span-3" readOnly/>
                 </div>
             </div>

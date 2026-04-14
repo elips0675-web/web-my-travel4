@@ -53,58 +53,60 @@ export default function RouteDetailsPageContent({ route }: { route: Route }) {
     const mapCenter = route.places.length > 0 ? route.places[0].coordinates : { lat: 48.8566, lng: 2.3522 }; // Default to Paris
 
     return (
-        <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
-            <div className="xl:col-span-2 space-y-8">
-                {/* Route Header */}
-                <div className="flex justify-between items-start">
-                    <div>
-                        <h1 className="text-4xl font-headline font-bold">{route.name}</h1>
-                        <div className="flex items-center flex-wrap gap-4 text-muted-foreground mt-2">
-                            <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {route.destination}</span>
-                            <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {new Date(route.startDate).toLocaleDateString('ru-RU')} - {new Date(route.endDate).toLocaleDateString('ru-RU')}</span>
+        <div className="container mx-auto py-8">
+            <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+                <div className="xl:col-span-2 space-y-8">
+                    {/* Route Header */}
+                    <div className="flex flex-col md:flex-row justify-between md:items-start gap-4">
+                        <div>
+                            <h1 className="text-4xl font-headline font-bold">{route.name}</h1>
+                            <div className="flex items-center flex-wrap gap-4 text-muted-foreground mt-2">
+                                <span className="flex items-center gap-2"><MapPin className="h-4 w-4" /> {route.destination}</span>
+                                <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {new Date(route.startDate).toLocaleDateString('ru-RU')} - {new Date(route.endDate).toLocaleDateString('ru-RU')}</span>
+                            </div>
                         </div>
+                        <Button variant="outline" className="w-full md:w-auto"><Edit className="mr-2 h-4 w-4" /> Редактировать</Button>
                     </div>
-                    <Button variant="outline"><Edit className="mr-2 h-4 w-4" /> Редактировать</Button>
+
+                    {/* Map */}
+                    <Card className="h-[400px] lg:h-[600px] overflow-hidden shadow-lg">
+                        <Map places={route.places} center={mapCenter} />
+                    </Card>
+
+                    {/* AI Suggestions */}
+                    <Suspense fallback={<SuggestionsSkeleton />}>
+                        <Suggestions route={route} />
+                    </Suspense>
+
                 </div>
 
-                {/* Map */}
-                <Card className="h-[400px] lg:h-[600px] overflow-hidden shadow-lg">
-                    <Map places={route.places} center={mapCenter} />
-                </Card>
-
-                {/* AI Suggestions */}
-                <Suspense fallback={<SuggestionsSkeleton />}>
-                    <Suggestions route={route} />
-                </Suspense>
-
-            </div>
-
-            <div className="xl:col-span-1 space-y-6">
-                <Card className="sticky top-20">
-                    <CardHeader className="flex flex-row items-center justify-between">
-                        <CardTitle className="font-headline">Места</CardTitle>
-                        <Button size="sm" variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Добавить</Button>
-                    </CardHeader>
-                    <CardContent>
-                        {route.places.length > 0 ? (
-                            <ul className="space-y-4">
-                                {route.places.map(place => (
-                                    <li key={place.id} className="flex items-start gap-4 p-3 rounded-lg hover:bg-secondary transition-colors">
-                                        <div className="bg-primary p-3 rounded-lg mt-1">
-                                            <PlaceIcon type={place.type} />
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold">{place.name}</h3>
-                                            <p className="text-sm text-muted-foreground line-clamp-2">{place.description}</p>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        ) : (
-                            <p className="text-muted-foreground text-center py-4">Добавьте места в ваш маршрут.</p>
-                        )}
-                    </CardContent>
-                </Card>
+                <div className="xl:col-span-1 space-y-6">
+                    <Card className="sticky top-20">
+                        <CardHeader className="flex flex-row items-center justify-between">
+                            <CardTitle className="font-headline">Места</CardTitle>
+                            <Button size="sm" variant="outline"><PlusCircle className="mr-2 h-4 w-4" /> Добавить</Button>
+                        </CardHeader>
+                        <CardContent>
+                            {route.places.length > 0 ? (
+                                <ul className="space-y-4">
+                                    {route.places.map(place => (
+                                        <li key={place.id} className="flex items-start gap-4 p-3 rounded-lg hover:bg-secondary transition-colors">
+                                            <div className="bg-primary p-3 rounded-lg mt-1">
+                                                <PlaceIcon type={place.type} />
+                                            </div>
+                                            <div>
+                                                <h3 className="font-semibold">{place.name}</h3>
+                                                <p className="text-sm text-muted-foreground line-clamp-2">{place.description}</p>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-muted-foreground text-center py-4">Добавьте места в ваш маршрут.</p>
+                            )}
+                        </CardContent>
+                    </Card>
+                </div>
             </div>
         </div>
     );

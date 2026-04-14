@@ -219,7 +219,7 @@ export default function TourDetailsPageContent({ slug }: { slug: string }) {
                         </Tabs>
                     </div>
 
-                    <div className="row-start-1 lg:row-auto">
+                    <div id="booking-widget" className="row-start-1 lg:row-auto">
                         <BookingWidget 
                             price={tour.priceRange} 
                             priceType="чел."
@@ -235,6 +235,17 @@ export default function TourDetailsPageContent({ slug }: { slug: string }) {
                 onOpenChange={setLightboxOpen}
                 startIndex={lightboxStartIndex}
             />
+            <div className="fixed bottom-0 left-0 right-0 border-t bg-background/95 p-4 z-20 lg:hidden">
+                <div className="container mx-auto flex items-center justify-between">
+                    <div>
+                        <p className="text-sm text-muted-foreground">От</p>
+                        <p className="font-bold text-xl">{tour.priceRange} / чел.</p>
+                    </div>
+                    <Button onClick={() => document.getElementById('booking-widget')?.scrollIntoView({ behavior: 'smooth' })} size="lg">
+                        Запросить
+                    </Button>
+                </div>
+            </div>
         </>
     );
 }

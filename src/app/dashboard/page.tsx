@@ -105,18 +105,20 @@ export default function DashboardPage() {
                     </p>
                 </div>
             )}
-            <div className="flex justify-between items-center mb-2">
-                <h1 className="text-3xl font-bold font-headline">Панель управления</h1>
-                <Button asChild disabled={isDemo}>
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-6">
+                <div>
+                    <h1 className="text-3xl font-bold font-headline text-center sm:text-left">Панель управления</h1>
+                    <p className="text-muted-foreground mt-1 text-center sm:text-left">
+                        Здесь отображаются ваши компании и предложения в виде доски объявлений.
+                    </p>
+                </div>
+                <Button asChild className="w-full sm:w-auto" disabled={isDemo}>
                     <Link href="/dashboard/new">
                         <PlusCircle className="mr-2 h-4 w-4" />
                         Добавить бизнес
                     </Link>
                 </Button>
             </div>
-             <p className="text-muted-foreground mb-6">
-                Здесь отображаются ваши компании и предложения в виде доски объявлений.
-            </p>
 
             {finalIsLoading ? (
                  <div className="flex h-64 items-center justify-center">

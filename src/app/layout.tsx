@@ -63,6 +63,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 <Link href="/filter-map" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Фильтр-карта
                 </Link>
+                 <Link href="/profile" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
+                  Профиль
+                </Link>
               </nav>
             </div>
             <div className="flex items-center gap-2">
@@ -78,7 +81,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                     <span className="sr-only">Уведомления</span>
                 </Link>
               </Button>
-               <Separator orientation="vertical" className="h-6 hidden md:block" />
+               <Separator orientation="vertical" className="h-6 hidden md:block mx-2" />
               <div className="hidden md:inline-flex">
                 <AuthButton />
               </div>

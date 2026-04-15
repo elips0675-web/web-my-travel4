@@ -5,7 +5,7 @@ import { Compass, Menu, Bell, User, Heart } from 'lucide-react';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import Link from 'next/link';
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetClose } from '@/components/ui/sheet';
 import { Separator } from '@/components/ui/separator';
 import PwaInstallBanner from '@/components/pwa-install-banner';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
@@ -99,27 +99,27 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         </Link>
                       </SheetTitle>
                     </SheetHeader>
-                    <nav className="grid gap-4 text-base font-medium mt-4">
-                      <SheetClose asChild><Link href="/" className="text-muted-foreground hover:text-foreground">Мои маршруты</Link></SheetClose>
-                      <SheetClose asChild><Link href="/routes/new" className="text-muted-foreground hover:text-foreground">Создать маршрут</Link></SheetClose>
-                      <SheetClose asChild><Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link></SheetClose>
-                      <SheetClose asChild><Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link></SheetClose>
-                      <SheetClose asChild><Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Рестораны</Link></SheetClose>
-                      <SheetClose asChild><Link href="/activities" className="text-muted-foreground hover:text-foreground">Развлечения</Link></SheetClose>
-                      <SheetClose asChild><Link href="/rental-car" className="text-muted-foreground hover:text-foreground">Транспорт</Link></SheetClose>
-                      <SheetClose asChild><Link href="/multi-filter" className="text-muted-foreground hover:text-foreground">Фильтр</Link></SheetClose>
-                      <SheetClose asChild><Link href="/filter-map" className="text-muted-foreground hover:text-foreground">Фильтр-карта</Link></SheetClose>
-                    </nav>
-                    <div className="mt-auto">
-                        <Separator className="my-4" />
-                         <nav className="grid gap-4 text-base font-medium">
-                            <SheetClose asChild><Link href="/favorites" className="flex items-center text-muted-foreground hover:text-foreground"><Heart className="mr-2 h-5 w-5" />Избранное</Link></SheetClose>
-                            <SheetClose asChild><Link href="/notifications" className="flex items-center text-muted-foreground hover:text-foreground"><Bell className="mr-2 h-5 w-5" />Уведомления</Link></SheetClose>
-                            <SheetClose asChild><Link href="/profile" className="flex items-center text-muted-foreground hover:text-foreground"><User className="mr-2 h-5 w-5" />Профиль</Link></SheetClose>
-                        </nav>
-                        <div className="mt-6">
-                             <AuthButton />
-                        </div>
+                    <div className="flex-1 overflow-y-auto">
+                      <nav className="grid gap-4 text-base font-medium mt-4">
+                        <SheetClose asChild><Link href="/" className="text-muted-foreground hover:text-foreground">Мои маршруты</Link></SheetClose>
+                        <SheetClose asChild><Link href="/routes/new" className="text-muted-foreground hover:text-foreground">Создать маршрут</Link></SheetClose>
+                        <SheetClose asChild><Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link></SheetClose>
+                        <SheetClose asChild><Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link></SheetClose>
+                        <SheetClose asChild><Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Рестораны</Link></SheetClose>
+                        <SheetClose asChild><Link href="/activities" className="text-muted-foreground hover:text-foreground">Развлечения</Link></SheetClose>
+                        <SheetClose asChild><Link href="/rental-car" className="text-muted-foreground hover:text-foreground">Транспорт</Link></SheetClose>
+                        <SheetClose asChild><Link href="/multi-filter" className="text-muted-foreground hover:text-foreground">Фильтр</Link></SheetClose>
+                        <SheetClose asChild><Link href="/filter-map" className="text-muted-foreground hover:text-foreground">Фильтр-карта</Link></SheetClose>
+                      </nav>
+                      <Separator className="my-4" />
+                      <nav className="grid gap-4 text-base font-medium">
+                          <SheetClose asChild><Link href="/favorites" className="flex items-center text-muted-foreground hover:text-foreground"><Heart className="mr-2 h-5 w-5" />Избранное</Link></SheetClose>
+                          <SheetClose asChild><Link href="/notifications" className="flex items-center text-muted-foreground hover:text-foreground"><Bell className="mr-2 h-5 w-5"/>Уведомления</Link></SheetClose>
+                          <SheetClose asChild><Link href="/profile" className="flex items-center text-muted-foreground hover:text-foreground"><User className="mr-2 h-5 w-5"/>Профиль</Link></SheetClose>
+                      </nav>
+                    </div>
+                    <div className="mt-auto border-t p-4">
+                        <AuthButton />
                     </div>
                   </SheetContent>
                 </Sheet>

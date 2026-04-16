@@ -114,7 +114,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                           </nav>
                     </div>
                     <div className="mt-auto border-t p-4">
+                      <SheetClose asChild>
                         <AuthButton />
+                      </SheetClose>
                     </div>
                   </SheetContent>
                 </Sheet>

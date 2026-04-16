@@ -10,6 +10,7 @@ import { Separator } from '@/components/ui/separator';
 import PwaInstallBanner from '@/components/pwa-install-banner';
 import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AuthButton } from '@/components/auth-button';
+import { MobileAuthSection } from '@/components/mobile-auth-section';
 
 export const metadata = {
   title: 'Компас',
@@ -96,8 +97,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                         </Link>
                       </SheetTitle>
                     </SheetHeader>
-                    <div className="flex-1 overflow-y-auto">
-                      <nav className="grid gap-4 text-base font-medium mt-4">
+                    <div className="flex-1 overflow-y-auto pt-4">
+                      <nav className="grid gap-4 text-base font-medium">
                         <SheetClose asChild><Link href="/routes/new" className="text-muted-foreground hover:text-foreground">Маршруты</Link></SheetClose>
                         <SheetClose asChild><Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link></SheetClose>
                         <SheetClose asChild><Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link></SheetClose>
@@ -113,10 +114,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                           <SheetClose asChild><Link href="/notifications" className="flex items-center text-muted-foreground hover:text-foreground"><Bell className="mr-2 h-5 w-5" />Уведомления</Link></SheetClose>
                           </nav>
                     </div>
-                    <div className="mt-auto border-t p-4">
-                      <SheetClose asChild>
-                        <AuthButton />
-                      </SheetClose>
+                    <div className="mt-auto border-t pt-4">
+                       <MobileAuthSection />
                     </div>
                   </SheetContent>
                 </Sheet>

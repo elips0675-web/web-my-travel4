@@ -53,36 +53,40 @@ const categoryConfig: any = {
     entertainment: { label: 'Развлечения', icon: Icons.Gamepad, color: '#a855f7', bgClass: 'bg-purple-100', textClass: 'text-purple-600', maxSelect: 5 }
 };
 
-// Оптимизация маршрута (жадный алгоритм ближайшего соседа)
+const calculateDistance = (coords1: number[], coords2: number[]) => {
+    const R = 6371; // Радиус Земли в км
+    const dLat = (coords2[0] - coords1[0]) * Math.PI / 180;
+    const dLon = (coords2[1] - coords1[1]) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(coords1[0] * Math.PI / 180) * Math.cos(coords2[0] * Math.PI / 180) * 
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c; // в км
+};
+
+// Оптимизация маршрута (жадный алгоритм)
 const optimizeRoute = (points: any[], startPoint: any) => {
+    if (!points || points.length === 0) return [startPoint];
     const unvisited = [...points];
-    const route = [startPoint];
+    let route = [startPoint];
     let current = startPoint;
 
     while (unvisited.length > 0) {
-        let nearest: { point: any, index: number } | null = null;
+        let nearestIdx = -1;
         let minDistance = Infinity;
 
         unvisited.forEach((point, index) => {
-            const R = 6371; // Радиус Земли в км
-            const dLat = (point.coords[0] - current.coords[0]) * Math.PI / 180;
-            const dLon = (point.coords[1] - current.coords[1]) * Math.PI / 180;
-            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                      Math.cos(current.coords[0] * Math.PI / 180) * Math.cos(point.coords[0] * Math.PI / 180) *
-                      Math.sin(dLon/2) * Math.sin(dLon/2);
-            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            const distance = R * c;
-            
+            const distance = calculateDistance(current.coords, point.coords);
             if (distance < minDistance) {
                 minDistance = distance;
-                nearest = { point, index };
+                nearestIdx = index;
             }
         });
 
-        if (nearest) {
-            route.push(nearest.point);
-            current = nearest.point;
-            unvisited.splice(nearest.index, 1);
+        if (nearestIdx !== -1) {
+            const nearestPoint = unvisited.splice(nearestIdx, 1)[0];
+            route.push(nearestPoint);
+            current = nearestPoint;
         }
     }
     return route;
@@ -252,7 +256,6 @@ const RouteMap = ({ points, transportMode, routeKey }: any) => {
         });
 
         if (routeCoords.length > 1) {
-            // СРАЗУ рисуем пунктирную линию как fallback
             const polyline = new (window as any).ymaps.Polyline(routeCoords, {}, {
                 strokeColor: "#6366f1",
                 strokeWidth: 4,
@@ -265,22 +268,22 @@ const RouteMap = ({ points, transportMode, routeKey }: any) => {
                 zoomMargin: 50 
             });
 
-            const yandexRoutingMode = { car: 'auto', walk: 'pedestrian', transit: 'masstransit' }[transportMode] || 'auto';
-            
-            (window as any).ymaps.route(routeCoords, { mapStateAutoApply: false, routingMode: yandexRoutingMode })
-            .then((builtRoute: any) => {
-                    // Если API Яндекса отработало, УБИРАЕМ пунктир и СТАВИМ настоящий маршрут
-                    mapInstanceRef.current.geoObjects.remove(polyline);
-                    builtRoute.options.set({ strokeColor: '#6366f1', strokeWidth: 5, opacity: 0.9 });
-                    builtRoute.getWayPoints().each((p: any) => p.options.set('visible', false));
-                    mapInstanceRef.current.geoObjects.add(builtRoute);
-                    mapInstanceRef.current.setBounds(builtRoute.getBounds(), { checkZoomRange: true, zoomMargin: 50 });
-                },
-                (error: any) => {
-                    // Если API не сработало, пунктирная линия уже на карте. Просто выводим ошибку в консоль.
-                    console.error("API маршрутизации не доступно. Отображаются пунктирные линии.", error);
-                }
-            );
+            if ((window as any).ymaps.route) {
+                const yandexRoutingMode = { car: 'auto', walk: 'pedestrian', transit: 'masstransit' }[transportMode] || 'auto';
+                
+                (window as any).ymaps.route(routeCoords, { mapStateAutoApply: false, routingMode: yandexRoutingMode })
+                .then((builtRoute: any) => {
+                        mapInstanceRef.current.geoObjects.remove(polyline);
+                        builtRoute.options.set({ strokeColor: '#6366f1', strokeWidth: 5, opacity: 0.9 });
+                        builtRoute.getWayPoints().each((p: any) => p.options.set('visible', false));
+                        mapInstanceRef.current.geoObjects.add(builtRoute);
+                        mapInstanceRef.current.setBounds(builtRoute.getBounds(), { checkZoomRange: true, zoomMargin: 50 });
+                    },
+                    (error: any) => {
+                        console.error("API маршрутизации не доступно. Отображаются пунктирные линии.", error);
+                    }
+                );
+            }
         } else {
             mapInstanceRef.current.setCenter(routeCoords[0], 14);
         }
@@ -317,6 +320,31 @@ export default function RouteBuilderPage() {
             return prev;
         });
     };
+
+    const runDemoRouteCalculation = (orderedRoute: any[]) => {
+        let totalDistance = 0;
+        let totalMinutes = 0;
+        const averageSpeeds: { [key: string]: number } = { car: 40, walk: 5, transit: 20 }; // km/h
+        const speed = averageSpeeds[transportMode] || 40;
+
+        const demoDetailedRoute = [orderedRoute[0]];
+
+        for (let i = 1; i < orderedRoute.length; i++) {
+            const prevPoint = orderedRoute[i-1];
+            const currentPoint = orderedRoute[i];
+            const distance = parseFloat(calculateDistance(prevPoint.coords, currentPoint.coords).toFixed(1));
+            const minutes = Math.round((distance / speed) * 60);
+            totalDistance += distance;
+            totalMinutes += minutes;
+            demoDetailedRoute.push({
+                ...currentPoint,
+                travelFromPrev: { mode: transportMode, distance, minutes }
+            });
+        }
+
+        setDetailedRoute(demoDetailedRoute.map((p, i) => ({...p, isLast: i === demoDetailedRoute.length - 1})));
+        setRouteTotals({ distance: parseFloat(totalDistance.toFixed(1)), minutes: totalMinutes });
+    };
     
     const buildAndCalculateRoute = useCallback(async () => {
         const allPoints = Object.values(selected).flat();
@@ -330,18 +358,13 @@ export default function RouteBuilderPage() {
         setShowRoute(true);
         setActiveDay(null);
 
-        // 1. Оптимизация порядка точек
         const basePoint = selected.accommodation[0] || allPoints[0];
         const otherPoints = allPoints.filter(p => p.id !== basePoint.id);
         const orderedRoute = optimizeRoute(otherPoints, basePoint).map((point, index) => ({ ...point, originalIndex: index }));
 
-        // 2. Расчет деталей маршрута через API (если карта готова)
         if (!isMapReady || !(window as any).ymaps?.route) {
-            const fallbackRoute = orderedRoute.map((point, index) => (
-                 index > 0 ? { ...point, travelFromPrev: null, isLast: index === orderedRoute.length - 1 } : { ...point, isLast: index === orderedRoute.length - 1 }
-            ));
-            setDetailedRoute(fallbackRoute);
-            setRouteTotals({ distance: 0, minutes: 0 });
+            console.warn("Карта или API маршрутизации не готовы. Запуск демо-режима.");
+            runDemoRouteCalculation(orderedRoute);
             setIsLoading(false);
             return;
         }
@@ -371,12 +394,8 @@ export default function RouteBuilderPage() {
             setDetailedRoute(newDetailedRoute.map((p, i) => ({...p, isLast: i === newDetailedRoute.length - 1})));
 
         } catch (error) {
-            console.error("Ошибка API Яндекса, детали маршрута не рассчитаны:", error);
-            const fallbackRoute = orderedRoute.map((point, index) => (
-                index > 0 ? { ...point, travelFromPrev: null, isLast: index === orderedRoute.length - 1 } : { ...point, isLast: index === orderedRoute.length - 1 }
-            ));
-            setDetailedRoute(fallbackRoute);
-            setRouteTotals({ distance: 0, minutes: 0 });
+            console.error("Ошибка API Яндекса, детали маршрута не рассчитаны. Запуск демо-режима.", error);
+            runDemoRouteCalculation(orderedRoute);
         } finally {
             setIsLoading(false);
         }
@@ -395,7 +414,7 @@ export default function RouteBuilderPage() {
         if (showRoute) {
             buildAndCalculateRoute();
         }
-    }, [selected, transportMode]);
+    }, [selected, transportMode, showRoute, buildAndCalculateRoute]);
 
 
     const days = useMemo(() => splitByDays(detailedRoute), [detailedRoute]);
@@ -409,7 +428,7 @@ export default function RouteBuilderPage() {
               <title>Конструктор маршрута</title>
             </Head>
             <Script 
-                src="https://api-maps.yandex.ru/2.1/?apikey=YOUR_API_KEY&lang=ru_RU&load=package.full" 
+                src="https://api-maps.yandex.ru/2.1/?apikey=&lang=ru_RU&load=package.full" 
                 strategy="lazyOnload"
                 onLoad={() => setMapReady(true)}
             />
@@ -475,15 +494,16 @@ export default function RouteBuilderPage() {
                         <div className="bg-white rounded-2xl p-5 shadow-sm">
                             <h3 className="font-bold text-gray-800 mb-4">Способ передвижения</h3>
                             <div className="flex gap-2 mb-4">
-                                {['walk', 'transit', 'car'].map(mode => (
+                                {Object.entries({ walk: 'Пешком', transit: 'Транспорт', car: 'Авто' }).map(([mode, label]) => (
                                     <button
                                         key={mode}
                                         onClick={() => setTransportMode(mode)}
                                         className={`transport-mode flex-1 py-2 px-3 text-sm rounded-lg border flex items-center justify-center gap-1 transition-all ${transportMode === mode ? 'active' : 'hover:bg-gray-100'}`}
                                     >
-                                        {mode === 'walk' && <><Icons.Walk /> Пешком</>}
-                                        {mode === 'transit' && <><Icons.Bus /> Транспорт</>}
-                                        {mode === 'car' && <><Icons.Car /> Авто</>}
+                                        {mode === 'walk' && <Icons.Walk />}
+                                        {mode === 'transit' && <Icons.Bus />}
+                                        {mode === 'car' && <Icons.Car />}
+                                        {label}
                                     </button>
                                 ))}
                             </div>

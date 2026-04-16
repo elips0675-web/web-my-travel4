@@ -1,6 +1,6 @@
 'use client';
 
-import { APIProvider, Map as GoogleMap, AdvancedMarker, Pin } from '@vis.gl/react-google-maps';
+import { APIProvider, Map as GoogleMap, AdvancedMarker, Pin, Polyline } from '@vis.gl/react-google-maps';
 import type { Place } from '@/lib/data';
 
 type MapProps = {
@@ -11,6 +11,7 @@ type MapProps = {
 
 export default function Map({ places, center, zoom = 12 }: MapProps) {
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const pathCoordinates = places.map(place => place.coordinates);
 
   return (
     <APIProvider apiKey={apiKey!}>
@@ -27,6 +28,14 @@ export default function Map({ places, center, zoom = 12 }: MapProps) {
             <Pin background={'hsl(var(--primary))'} borderColor={'hsl(var(--primary-foreground))'} glyphColor={'hsl(var(--primary-foreground))'} />
           </AdvancedMarker>
         ))}
+        {pathCoordinates.length > 1 && (
+          <Polyline
+            path={pathCoordinates}
+            strokeColor="#6366f1"
+            strokeOpacity={0.8}
+            strokeWeight={5}
+          />
+        )}
       </GoogleMap>
     </APIProvider>
   );

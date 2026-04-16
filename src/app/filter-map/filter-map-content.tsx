@@ -469,9 +469,9 @@ export default function FilterMapContent() {
                 </div>
             </header>
 
-            <div className="flex-1 overflow-hidden flex">
+            <div className="flex-1 overflow-hidden flex md:flex-row flex-col-reverse">
                 {(viewMode === 'split' || viewMode === 'list') && (
-                    <aside ref={asideRef} onScroll={handleScroll} className={cn('bg-gray-50/50 backdrop-blur-sm border-r border-gray-200 overflow-y-auto', viewMode === 'split' ? 'w-80 hidden lg:block p-4' : 'w-full max-w-sm p-4')}>
+                     <aside ref={asideRef} onScroll={handleScroll} className={cn('bg-gray-50/50 backdrop-blur-sm border-r border-gray-200 overflow-y-auto', viewMode === 'split' ? 'w-80 hidden lg:block p-4' : 'w-full max-w-sm p-4', viewMode === 'list' && 'hidden', 'md:block')}>
                         <div className="flex items-center justify-between mb-4">
                             <h2 className="font-bold text-gray-800">Фильтры</h2>
                             {Object.keys(activeFilters).length > 0 && (<button onClick={resetFilters} className="text-xs text-indigo-600 font-medium hover:underline">Сбросить</button>)}
@@ -483,7 +483,7 @@ export default function FilterMapContent() {
                 )}
 
                 {(viewMode === 'split' || viewMode === 'list') && (
-                    <div className={cn('bg-white border-r border-gray-200 overflow-y-auto', viewMode === 'split' ? 'w-96 hidden xl:block' : 'w-[450px] hidden lg:block', viewMode === 'list' ? 'flex-1 w-auto' : '')} ref={listRef} onScroll={handleScroll}>
+                    <div className={cn('bg-white border-r border-gray-200 overflow-y-auto', viewMode === 'split' ? 'w-96 hidden xl:block' : 'w-[450px] hidden lg:block', viewMode === 'list' ? 'flex-1 w-auto' : '', 'md:block')} ref={listRef} onScroll={handleScroll}>
                         <div className="p-4 sticky top-0 bg-white/80 backdrop-blur-sm border-b border-gray-100 z-10 flex items-center justify-between">
                             <span className="text-sm text-gray-600">Найдено <span className="font-bold text-gray-900">{filteredData.length}</span></span>
                             <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="text-sm border border-gray-200 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -500,10 +500,19 @@ export default function FilterMapContent() {
                 )}
 
                 {(viewMode === 'split' || viewMode === 'map') && (
-                    <div className={cn('relative bg-gray-100', viewMode === 'split' ? 'flex-1' : 'w-full')}>
+                    <div className={cn('relative bg-gray-100', viewMode === 'split' ? 'flex-1' : 'w-full', viewMode === 'list' && 'hidden', 'md:block')}>
                         <MapComponent items={filteredData} activeItem={activeItem} onMarkerClick={setActiveItem} selectedCategories={selectedCategories} />
                     </div>
                 )}
+                 {/* Mobile View */}
+                <div className="md:hidden flex-1 flex flex-col">
+                    <div className="flex-1 relative">
+                        <MapComponent items={filteredData} activeItem={activeItem} onMarkerClick={setActiveItem} selectedCategories={selectedCategories} />
+                    </div>
+                    <div className="h-1/3 bg-white border-t border-gray-200 overflow-y-auto p-4 space-y-4">
+                    {filteredData.map(item => (<div key={item.id} id={`item-${item.id}`}><ResultCard item={item} isActive={activeItem?.id === item.id} onClick={setActiveItem} onHover={setActiveItem} /></div>))}
+                    </div>
+                </div>
             </div>
             <div className="fixed bottom-6 right-6 z-50 flex flex-col items-center gap-3">
                 {showScrollToTop && (

@@ -24,30 +24,26 @@ export function ImageLightbox({ images, startIndex = 0, isOpen, onOpenChange }: 
       return;
     }
 
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
+    const updateCarouselInfo = () => {
+        if (!api) return;
+        setCount(api.scrollSnapList().length);
+        setCurrent(api.selectedScrollSnap() + 1);
+    }
 
-    const handleSelect = () => {
-      if (!api) return;
-      setCurrent(api.selectedScrollSnap() + 1);
-    };
-
-    api.on('select', handleSelect);
-    api.on('reInit', () => {
-      if (!api) return;
-      setCount(api.scrollSnapList().length);
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
+    updateCarouselInfo();
+    api.on('select', updateCarouselInfo);
+    api.on('reInit', updateCarouselInfo);
 
     return () => {
-      api?.off('select', handleSelect);
-      api?.off('reInit', handleSelect);
+      api?.off('select', updateCarouselInfo);
+      api?.off('reInit', updateCarouselInfo);
     };
   }, [api]);
 
   useEffect(() => {
     if (api && isOpen) {
-      api.scrollTo(startIndex, true);
+      // Ensure the carousel is correctly initialized to the startIndex when opened
+      setTimeout(() => api.scrollTo(startIndex, true), 0);
     }
   }, [api, isOpen, startIndex]);
 
@@ -70,37 +66,40 @@ export function ImageLightbox({ images, startIndex = 0, isOpen, onOpenChange }: 
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent className="bg-black/90 border-0 p-0 max-w-full w-full h-full flex items-center justify-center">
+      <DialogContent className="bg-transparent shadow-none border-0 p-0 w-screen h-screen flex items-center justify-center">
         <DialogTitle className="sr-only">Галерея изображений</DialogTitle>
         <DialogDescription className="sr-only">
           Лайтбокс с галереей изображений. Используйте стрелки для навигации между изображениями или клавишу Escape для закрытия.
         </DialogDescription>
+        
         <Carousel
           setApi={setApi}
           opts={{ startIndex, loop: true }}
-          className="w-full h-full max-w-6xl"
+          className="w-full max-w-5xl aspect-video"
         >
-          <CarouselContent className="h-full">
+          <CarouselContent>
             {images.map((src, index) => (
-              <CarouselItem key={index} className="flex items-center justify-center">
-                <div className="relative w-full h-5/6">
-                   <Image src={src} alt={`Lightbox image ${index + 1}`} fill className="object-contain" />
+              <CarouselItem key={index}>
+                <div className="relative w-full h-full">
+                   <Image src={src} alt={`Lightbox image ${index + 1}`} fill sizes="(max-width: 1280px) 100vw, 1280px" className="object-contain" />
                 </div>
               </CarouselItem>
             ))}
           </CarouselContent>
-           <CarouselPrevious className="absolute left-4 top-1/2 -translate-y-1/2 z-10 text-white bg-white/20 hover:bg-white/30 border-0 h-12 w-12" />
-           <CarouselNext className="absolute right-4 top-1/2 -translate-y-1/2 z-10 text-white bg-white/20 hover:bg-white/30 border-0 h-12 w-12" />
+           <CarouselPrevious className="absolute left-2 md:-left-16 top-1/2 -translate-y-1/2 z-10 text-white bg-white/10 hover:bg-white/20 border-0 h-12 w-12" />
+           <CarouselNext className="absolute right-2 md:-right-16 top-1/2 -translate-y-1/2 z-10 text-white bg-white/10 hover:bg-white/20 border-0 h-12 w-12" />
         </Carousel>
 
         <div className="absolute top-4 right-4 text-white z-20">
-          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="hover:bg-white/20">
+          <Button variant="ghost" size="icon" onClick={() => onOpenChange(false)} className="hover:bg-white/20 rounded-full h-12 w-12">
             <X className="h-8 w-8" />
           </Button>
         </div>
-         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white z-20 bg-black/50 px-4 py-2 rounded-full text-sm">
-            {current} / {count}
-        </div>
+         {count > 0 && (
+            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white z-20 bg-black/50 px-4 py-2 rounded-full text-sm font-medium">
+                {current} / {count}
+            </div>
+         )}
       </DialogContent>
     </Dialog>
   );

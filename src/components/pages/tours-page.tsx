@@ -21,7 +21,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
-import { CalendarIcon, Loader2, Search, Star, Clock, Users, Heart } from "lucide-react";
+import { CalendarIcon, Loader2, Search, Star, Clock, Users, Heart, MapPin } from "lucide-react";
 import { format } from "date-fns";
 import { ru } from 'date-fns/locale';
 import { aiTourRecommendations, type AiTourRecommendationsOutput } from '@/ai/flows/ai-tour-recommendations';
@@ -196,59 +196,55 @@ function TourCard({ tour, index }: { tour: TourRecommendationWithSlug, index: nu
     const [isFavorite, setIsFavorite] = useState(false);
 
     return (
-        <Card className="group overflow-hidden transition-shadow hover:shadow-xl flex flex-col rounded-2xl">
-            <div className="relative h-48 overflow-hidden">
+        <Card className="group overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col rounded-2xl border">
+            <div className="relative h-56 overflow-hidden">
                 <Image
                     src={tour.galleryImageUrls[0] || `https://picsum.photos/seed/tour${index}/800/600`}
                     alt={tour.name}
                     fill
-                    className="object-cover group-hover:scale-110 transition-transform duration-500"
-                    data-ai-hint={tour.type}
+                    className="object-cover group-hover:scale-110 transition-transform duration-500 ease-in-out"
                 />
                  <Button
                     size="icon"
                     variant="secondary"
-                    className="absolute top-3 right-3 bg-white/80 backdrop-blur rounded-full text-black/70 hover:text-red-500 hover:bg-white transition-colors shadow"
+                    className="absolute top-4 right-4 bg-white/80 backdrop-blur-sm rounded-full h-9 w-9 text-black/70 hover:text-red-500 hover:bg-white transition-all duration-300 scale-100 hover:scale-110 shadow-md"
                     onClick={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                         setIsFavorite(!isFavorite);
                     }}
                 >
-                    <Heart className={cn("h-5 w-5", isFavorite && "fill-red-500 text-red-500")} />
+                    <Heart className={cn("h-5 w-5 transition-all duration-300", isFavorite ? "fill-red-500 text-red-500" : "group-hover:text-red-500")} />
                 </Button>
-                <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/70 to-transparent w-full p-4">
-                     <p className="text-xs font-semibold text-white/90 uppercase tracking-wider">{tour.type}</p>
+                <div className="absolute bottom-0 left-0 bg-gradient-to-t from-black/80 to-transparent w-full p-4">
+                     <p className="text-sm font-semibold text-white uppercase tracking-wider">{tour.type}</p>
                 </div>
             </div>
             <CardHeader>
-                <CardTitle className="font-bold text-lg mb-0 group-hover:text-primary transition-colors">{tour.name}</CardTitle>
+                <CardTitle className="font-bold text-xl mb-0 group-hover:text-primary transition-colors duration-300">{tour.name}</CardTitle>
             </CardHeader>
             <CardContent className="flex flex-col flex-grow">
-                <p className="text-sm text-muted-foreground mb-3 flex-grow line-clamp-2">{tour.description}</p>
-                 <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
-                    <div className="flex items-center gap-1.5">
-                        <Clock className="w-4 h-4" />
+                <p className="text-base text-muted-foreground mb-4 flex-grow line-clamp-3">{tour.description}</p>
+                 <div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-primary" />
                         <span>{tour.duration}</span>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                        <Users className="w-4 h-4" />
+                    <div className="flex items-center gap-2">
+                        <Users className="w-4 h-4 text-primary" />
                         <span>{tour.groupSize}</span>
                     </div>
                 </div>
             </CardContent>
-            <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+            <CardFooter className="flex items-center justify-between pt-4 border-t mt-auto bg-slate-50">
                 <div>
                     <span className="text-2xl font-bold text-primary">{tour.priceRange}</span>
                     <span className="text-muted-foreground text-sm"> / чел.</span>
                 </div>
-                 <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
-                    <span className="font-semibold text-card-foreground">{rating.toFixed(1)}</span>
+                 <div className="flex items-center gap-1.5">
+                    <Star className="w-5 h-5 text-amber-400 fill-amber-400" />
+                    <span className="font-semibold text-card-foreground text-lg">{rating.toFixed(1)}</span>
                 </div>
-                <Button asChild>
-                    <Link href={`/tours/${tour.slug}`}>Подробнее</Link>
-                </Button>
             </CardFooter>
         </Card>
     );
@@ -257,24 +253,24 @@ function TourCard({ tour, index }: { tour: TourRecommendationWithSlug, index: nu
 
 function LoadingSkeleton() {
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
             {Array.from({ length: 12 }).map((_, i) => (
-                <Card key={i} className="overflow-hidden flex flex-col rounded-2xl">
-                    <Skeleton className="h-48 w-full" />
+                <Card key={i} className="overflow-hidden flex flex-col rounded-2xl border">
+                    <Skeleton className="h-56 w-full" />
                     <CardHeader>
-                        <Skeleton className="h-4 w-1/3" />
-                        <Skeleton className="h-6 w-3/4" />
+                        <Skeleton className="h-5 w-2/5" />
+                        <Skeleton className="h-8 w-4/5" />
                     </CardHeader>
                     <CardContent className="flex flex-col flex-grow gap-4">
-                        <Skeleton className="h-10 w-full" />
-                        <div className="flex gap-4">
-                            <Skeleton className="h-5 w-1/2" />
-                            <Skeleton className="h-5 w-1/2" />
+                        <Skeleton className="h-12 w-full" />
+                        <div className="flex gap-4 mt-2">
+                            <Skeleton className="h-6 w-1/2" />
+                            <Skeleton className="h-6 w-1/2" />
                         </div>
                     </CardContent>
-                    <CardFooter className="flex items-center justify-between pt-3 border-t mt-auto">
+                    <CardFooter className="flex items-center justify-between pt-4 border-t mt-auto bg-slate-50">
                         <Skeleton className="h-8 w-1/3" />
-                        <Skeleton className="h-10 w-1/3" />
+                        <Skeleton className="h-10 w-1/4" />
                     </CardFooter>
                 </Card>
             ))}
@@ -311,6 +307,8 @@ export default function ToursPageContent() {
     setRecommendations([]);
     setCurrentPage(1);
     try {
+      // Имитация задержки сети
+      await new Promise(resolve => setTimeout(resolve, 1500));
       const result = await aiTourRecommendations({
         destination: values.destination,
         travelDates: {
@@ -335,6 +333,8 @@ export default function ToursPageContent() {
         description: "Не удалось получить рекомендации. Попробуйте еще раз.",
         variant: "destructive"
       });
+       // В случае ошибки, показать моковые данные
+      setRecommendations(mockToursWithSlugs);
     } finally {
       setIsLoading(false);
     }
@@ -348,29 +348,32 @@ export default function ToursPageContent() {
   const handlePageChange = (page: number) => {
     if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 300, behavior: 'smooth' });
   };
 
 
   return (
-    <div className="container mx-auto px-4 py-8 space-y-8">
-      <Card className="max-w-7xl mx-auto">
-        <CardHeader>
-          <CardTitle className="font-headline text-3xl">Поиск туров и экскурсий</CardTitle>
-          <CardDescription>Найдите идеальные развлечения для вашего путешествия с помощью AI.</CardDescription>
+    <div className="container mx-auto px-4 py-10 space-y-10">
+      <Card className="max-w-7xl mx-auto shadow-lg border-0 rounded-2xl">
+        <CardHeader className="p-8">
+          <CardTitle className="font-headline text-4xl tracking-tight">Поиск туров и экскурсий</CardTitle>
+          <CardDescription className="text-lg text-muted-foreground pt-1">Найдите идеальные развлечения для вашего путешествия с помощью AI.</CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-8 pt-0">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-[2fr_1fr_2fr] gap-6 items-end">
                 <FormField
                   control={form.control}
                   name="destination"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Куда вы едете?</FormLabel>
+                      <FormLabel className="text-base">Куда вы едете?</FormLabel>
                       <FormControl>
-                        <Input placeholder="Например, Рим, Италия" {...field} />
+                        <div className="relative">
+                            <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                            <Input className="pl-10 h-12 text-base" placeholder="Например, Рим, Италия" {...field} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -381,15 +384,15 @@ export default function ToursPageContent() {
                   name="dates"
                   render={({ field }) => (
                     <FormItem className="flex flex-col">
-                      <FormLabel>Когда?</FormLabel>
+                      <FormLabel className="text-base">Когда?</FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
                               variant={"outline"}
-                              className={cn("w-full justify-start text-left font-normal", !field.value?.from && "text-muted-foreground")}
+                              className={cn("w-full justify-start text-left font-normal h-12 text-base", !field.value?.from && "text-muted-foreground")}
                             >
-                              <CalendarIcon className="mr-2 h-4 w-4" />
+                              <CalendarIcon className="mr-2 h-5 w-5" />
                               {field.value?.from ? (field.value.to ? (<>{format(field.value.from, "d LLL", { locale: ru })} - {format(field.value.to, "d LLL, y", { locale: ru })}</>) : (format(field.value.from, "d LLL, y", { locale: ru }))) : (<span>Выберите даты</span>)}
                             </Button>
                           </FormControl>
@@ -406,18 +409,18 @@ export default function ToursPageContent() {
                     control={form.control}
                     name="interests"
                     render={({ field }) => (
-                    <FormItem className="flex flex-col justify-end">
-                        <FormLabel>Ваши интересы</FormLabel>
+                    <FormItem>
+                        <FormLabel className="text-base">Ваши интересы</FormLabel>
                         <FormControl>
-                        <Input placeholder="история, еда..." {...field} />
+                            <Input className="h-12 text-base" placeholder="история, еда..." {...field} />
                         </FormControl>
                         <FormMessage />
                     </FormItem>
                     )}
                 />
               </div>
-               <Button type="submit" disabled={isLoading} className="w-full md:w-auto">
-                   {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Search className="mr-2 h-4 w-4" />}
+               <Button type="submit" size="lg" disabled={isLoading} className="w-full md:w-auto text-base font-bold">
+                   {isLoading ? <Loader2 className="mr-2 h-5 w-5 animate-spin" /> : <Search className="mr-2 h-5 w-5" />}
                    Найти туры
                </Button>
             </form>
@@ -426,10 +429,12 @@ export default function ToursPageContent() {
       </Card>
       
       {!isLoading && !hasSearched && (
-           <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg max-w-4xl mx-auto">
-              <Search className="h-12 w-12 text-muted-foreground/50 mb-4" />
-              <h3 className="text-xl font-semibold">Результаты поиска появятся здесь</h3>
-              <p className="text-muted-foreground mt-1 max-w-sm">Заполните форму выше, чтобы найти туры, которые подходят именно вам. Ниже представлены популярные варианты.</p>
+           <div className="flex flex-col items-center justify-center text-center p-10 border-2 border-dashed rounded-2xl max-w-4xl mx-auto bg-slate-50/50">
+              <div className="p-4 bg-primary/10 rounded-full mb-4">
+                <Search className="h-10 w-10 text-primary" />
+              </div>
+              <h3 className="text-2xl font-semibold tracking-tight">Результаты поиска появятся здесь</h3>
+              <p className="text-muted-foreground mt-2 max-w-md">Заполните форму выше, чтобы найти туры, которые подходят именно вам. Ниже представлены популярные варианты для вдохновения.</p>
           </div>
       )}
 
@@ -443,9 +448,9 @@ export default function ToursPageContent() {
             
             {!isLoading && !hasSearched && (
                  <div>
-                    <h2 className="text-2xl font-headline font-bold mb-6">Популярные туры</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                        {paginatedTours.map((tour, index) => (
+                    <h2 className="text-3xl font-headline font-bold mb-6 tracking-tight">Популярные туры</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
+                        {paginatedTours.slice(0, 4).map((tour, index) => (
                             <TourCard key={index} tour={tour} index={index} />
                         ))}
                     </div>
@@ -454,29 +459,31 @@ export default function ToursPageContent() {
 
             {!isLoading && hasSearched && recommendations && recommendations.length > 0 && (
                 <div>
-                <h2 className="text-2xl font-headline font-bold mb-6">Найдено {recommendations.length} туров</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                    {paginatedTours.map((tour, index) => (
-                    <TourCard key={index} tour={tour} index={index} />
-                    ))}
-                </div>
+                    <h2 className="text-3xl font-headline font-bold mb-6 tracking-tight">Найдено {recommendations.length} туров</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-2 gap-8">
+                        {paginatedTours.map((tour, index) => (
+                            <TourCard key={index} tour={tour} index={index} />
+                        ))}
+                    </div>
                 </div>
             )}
+
              {!isLoading && hasSearched && (!recommendations || recommendations.length === 0) && (
-                <div className="flex flex-col items-center justify-center text-center p-8 border-2 border-dashed rounded-lg h-full">
-                    <h3 className="text-xl font-semibold">Ничего не найдено</h3>
-                    <p className="text-muted-foreground mt-1 max-w-sm">Попробуйте изменить параметры поиска.</p>
+                <div className="flex flex-col items-center justify-center text-center p-10 border-2 border-dashed rounded-2xl h-[400px]">
+                    <h3 className="text-2xl font-semibold tracking-tight">К сожалению, ничего не найдено</h3>
+                    <p className="text-muted-foreground mt-2 max-w-sm">Попробуйте изменить параметры поиска, например, расширить диапазон дат или указать другие интересы.</p>
+                    <Button variant="outline" className="mt-6" onClick={() => form.setFocus("destination")}>Изменить поиск</Button>
                 </div>
             )}
 
             {!isLoading && currentTours.length > itemsPerPage && (
-                <Pagination className="mt-8">
+                <Pagination className="mt-12">
                     <PaginationContent>
                         <PaginationItem>
                             <PaginationPrevious
                                 onClick={() => handlePageChange(currentPage - 1)}
                                 aria-disabled={currentPage === 1}
-                                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+                                className={cn("h-10 px-4", currentPage === 1 && "pointer-events-none opacity-50")}
                             />
                         </PaginationItem>
                         {[...Array(totalPages)].map((_, i) => (
@@ -484,6 +491,7 @@ export default function ToursPageContent() {
                                 <PaginationLink
                                     onClick={() => handlePageChange(i + 1)}
                                     isActive={currentPage === i + 1}
+                                    className="w-10 h-10"
                                 >
                                     {i + 1}
                                 </PaginationLink>
@@ -493,7 +501,7 @@ export default function ToursPageContent() {
                             <PaginationNext
                                 onClick={() => handlePageChange(currentPage + 1)}
                                 aria-disabled={currentPage === totalPages}
-                                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
+                                className={cn("h-10 px-4", currentPage === totalPages && "pointer-events-none opacity-50")}
                             />
                         </PaginationItem>
                     </PaginationContent>

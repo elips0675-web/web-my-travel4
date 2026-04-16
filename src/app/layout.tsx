@@ -12,7 +12,7 @@ import { FirebaseClientProvider } from '@/firebase/client-provider';
 import { AuthButton } from '@/components/auth-button';
 
 export const metadata = {
-  title: 'Путевой Компас',
+  title: 'Компас',
   description: 'Ваш AI-помощник для планирования путешествий',
 };
 
@@ -33,14 +33,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
             <div className="flex items-center gap-6">
               <Link href="/" className="flex items-center gap-2">
                 <Compass className="h-6 w-6 text-primary" />
-                <span className="font-headline text-xl font-bold text-foreground">Путевой Компас</span>
+                <span className="font-headline text-xl font-bold text-foreground">Компас</span>
               </Link>
-              <nav className="hidden md:flex items-center gap-x-8">
-                <Link href="/" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                  Мои маршруты
-                </Link>
+              <nav className="hidden md:flex items-center gap-x-4">
                 <Link href="/routes/new" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                  Создать маршрут
+                  Маршруты
                 </Link>
                 <Link href="/tours" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Туры
@@ -62,9 +59,6 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                 </Link>
                 <Link href="/filter-map" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
                   Фильтр-карта
-                </Link>
-                 <Link href="/profile" className="text-xl font-medium text-muted-foreground transition-colors hover:text-foreground">
-                  Профиль
                 </Link>
               </nav>
             </div>
@@ -98,14 +92,13 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       <SheetTitle asChild>
                          <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
                           <Compass className="h-6 w-6 text-primary" />
-                          <span>Путевой Компас</span>
+                          <span>Компас</span>
                         </Link>
                       </SheetTitle>
                     </SheetHeader>
                     <div className="flex-1 overflow-y-auto">
                       <nav className="grid gap-4 text-base font-medium mt-4">
-                        <SheetClose asChild><Link href="/" className="text-muted-foreground hover:text-foreground">Мои маршруты</Link></SheetClose>
-                        <SheetClose asChild><Link href="/routes/new" className="text-muted-foreground hover:text-foreground">Создать маршрут</Link></SheetClose>
+                        <SheetClose asChild><Link href="/routes/new" className="text-muted-foreground hover:text-foreground">Маршруты</Link></SheetClose>
                         <SheetClose asChild><Link href="/tours" className="text-muted-foreground hover:text-foreground">Туры</Link></SheetClose>
                         <SheetClose asChild><Link href="/housing" className="text-muted-foreground hover:text-foreground">Жилье</Link></SheetClose>
                         <SheetClose asChild><Link href="/restaurants" className="text-muted-foreground hover:text-foreground">Рестораны</Link></SheetClose>
@@ -117,9 +110,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
                       <Separator className="my-4" />
                       <nav className="grid gap-4 text-base font-medium">
                           <SheetClose asChild><Link href="/favorites" className="flex items-center text-muted-foreground hover:text-foreground"><Heart className="mr-2 h-5 w-5" />Избранное</Link></SheetClose>
-                          <SheetClose asChild><Link href="/notifications" className="flex items-center text-muted-foreground hover:text-foreground"><Bell className="mr-2 h-5 w-5"/>Уведомления</Link></SheetClose>
-                          <SheetClose asChild><Link href="/profile" className="flex items-center text-muted-foreground hover:text-foreground"><User className="mr-2 h-5 w-5"/>Профиль</Link></SheetClose>
-                      </nav>
+                          <SheetClose asChild><Link href="/notifications" className="flex items-center text-muted-foreground hover:text-foreground"><Bell className="mr-2 h-5 w-5" />Уведомления</Link></SheetClose>
+                          </nav>
                     </div>
                     <div className="mt-auto border-t p-4">
                         <AuthButton />
